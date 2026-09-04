@@ -215,6 +215,7 @@ export function CompetencyRadar() {
               stroke="var(--color-muted-foreground)"
               fill="var(--color-muted-foreground)"
               fillOpacity={0.12}
+              isAnimationActive={false}
             />
             <RechartRadar
               name="Current"
@@ -222,6 +223,7 @@ export function CompetencyRadar() {
               stroke="var(--color-accent)"
               fill="var(--color-accent)"
               fillOpacity={0.22}
+              isAnimationActive={false}
             />
           </RadarChart>
         </ResponsiveContainer>
