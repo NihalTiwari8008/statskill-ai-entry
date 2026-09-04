@@ -90,10 +90,10 @@ function Index() {
     <div className="min-h-screen bg-background">
       <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col lg:flex-row">
         {/* Left: brand + value proposition */}
-        <section className="flex flex-1 flex-col justify-center px-6 py-12 lg:px-16">
+        <section className="flex flex-1 flex-col justify-start px-6 pt-12 pb-16 lg:px-16 lg:pt-16 lg:pb-20">
           <StatSkillWordmark />
 
-          <h1 className="mt-12 text-4xl font-extrabold leading-[1.1] tracking-tight text-foreground sm:text-5xl">
+          <h1 className="mt-20 text-4xl font-extrabold leading-[1.1] tracking-tight text-foreground sm:text-5xl lg:mt-24">
             Build Skills.
             <br />
             Close Gaps.
@@ -101,12 +101,12 @@ function Index() {
             <span className="text-accent">Strengthen the Workforce.</span>
           </h1>
 
-          <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground">
+          <p className="mt-8 max-w-md text-base leading-relaxed text-muted-foreground">
             AI-powered competency intelligence and personalized learning for
             India's statistical workforce.
           </p>
 
-          <div className="mt-12 grid max-w-lg gap-4 sm:grid-cols-3">
+          <div className="mt-14 grid max-w-lg gap-4 sm:grid-cols-3">
             {valueProps.map((item) => (
               <div
                 key={item.title}
