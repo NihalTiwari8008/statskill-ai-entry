@@ -16,9 +16,6 @@ export function StatSkillWordmark({ className }: { className?: string }) {
     <div className={cn("flex items-center gap-2.5", className)}>
       <StatSkillLogo />
       <span className="text-lg font-bold tracking-tight text-foreground">StatSkill</span>
-      <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-        AI
-      </span>
     </div>
   );
 }
