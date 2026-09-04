@@ -1,10 +1,9 @@
-import logoAsset from "@/assets/statskill-logo.png.asset.json";
 import { cn } from "@/lib/utils";
 
 export function StatSkillLogo({ className }: { className?: string }) {
   return (
     <img
-      src={logoAsset.url}
+      src="/statskill-logo.png"
       alt="StatSkill AI logo"
       className={cn("h-8 w-8 object-contain", className)}
     />
