@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import {
-  ArrowRight,
   BookOpen,
   CheckCircle2,
   ClipboardList,
