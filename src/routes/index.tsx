@@ -123,8 +123,8 @@ function Index() {
         </section>
 
         {/* Right: sign in */}
-        <section className="flex flex-1 flex-col justify-center border-t border-border bg-card px-6 py-12 lg:border-l lg:border-t-0 lg:px-16">
-          <div className="mx-auto w-full max-w-md">
+        <section className="flex flex-1 flex-col justify-start border-t border-border bg-card px-6 pt-12 pb-16 lg:border-l lg:border-t-0 lg:px-16 lg:pt-16 lg:pb-20">
+          <div className="mx-auto mt-12 w-full max-w-md lg:mt-32">
             <h2 className="text-center text-2xl font-bold tracking-tight text-foreground">
               Sign in as {role === "learner" ? "Learner" : "Admin"}
             </h2>
@@ -133,7 +133,7 @@ function Index() {
               dashboard.
             </p>
 
-            <div className="mt-8 grid grid-cols-2 gap-4">
+            <div className="mt-10 grid grid-cols-2 gap-4">
               {roles.map((r) => {
                 const selected = role === r.id;
                 return (
