@@ -197,29 +197,6 @@ function Index() {
               Continue with Email
             </button>
 
-            <div className="mt-8 text-center">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Prototype Quick Access
-              </p>
-              <div className="mt-3 flex justify-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => mockAuth("Learner demo")}
-                  className="flex items-center gap-1 rounded-full bg-accent-soft px-4 py-1.5 text-xs font-semibold text-accent transition-colors hover:bg-accent hover:text-accent-foreground"
-                >
-                  Learner Demo
-                  <ArrowRight className="h-3 w-3" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => mockAuth("Admin demo")}
-                  className="flex items-center gap-1 rounded-full bg-muted px-4 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
-                >
-                  Admin Demo
-                  <ArrowRight className="h-3 w-3" />
-                </button>
-              </div>
-            </div>
 
             {status && (
               <p
