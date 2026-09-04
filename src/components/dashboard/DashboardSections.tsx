@@ -208,7 +208,7 @@ export function CompetencyRadar() {
               dataKey="dimension"
               tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
             />
-            <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
+            <PolarRadiusAxis angle={90} domain={[0, 100]} tick={false} axisLine={false} tickCount={5} />
             <RechartRadar
               name="Cadre Target"
               dataKey="target"

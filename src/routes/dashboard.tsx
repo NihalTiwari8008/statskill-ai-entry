@@ -40,7 +40,7 @@ function DashboardPage() {
 
   return (
     <div className="flex min-h-screen bg-muted/40">
-      <DashboardSidebar className="hidden lg:flex" />
+      <DashboardSidebar className="sticky top-0 hidden h-screen lg:flex" />
 
       {mobileNavOpen ? (
         <div className="fixed inset-0 z-40 lg:hidden">
