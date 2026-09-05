@@ -7,8 +7,8 @@ import {
   CompetencyOverview,
   CompetencyRadar,
   DashboardFooter,
-  LearningPaths,
-  PrioritySkillGaps,
+  LearningPathSummary,
+  SkillGapSummary,
   SummaryStats,
   WelcomeHeader,
 } from "@/components/dashboard/DashboardSections";
@@ -65,15 +65,22 @@ function DashboardPage() {
       <div className="flex min-w-0 flex-1 flex-col">
         <DashboardTopBar onMenuClick={() => setMobileNavOpen(true)} />
 
-        <main className="flex-1 space-y-10 px-4 py-8 lg:px-8 lg:py-10">
+        <main className="flex-1 space-y-8 px-4 py-7 lg:px-8 lg:py-8">
           <WelcomeHeader />
+
           <SummaryStats />
+
           <CompetencyOverview />
-          <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+
+          <div className="max-w-6xl">
             <CompetencyRadar />
-            <PrioritySkillGaps />
           </div>
-          <LearningPaths />
+
+          <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+            <SkillGapSummary />
+            <LearningPathSummary />
+          </div>
+
           <DashboardFooter />
         </main>
       </div>

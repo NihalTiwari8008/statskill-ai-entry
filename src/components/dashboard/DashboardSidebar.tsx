@@ -26,7 +26,7 @@ const groups: { title: string; items: NavItem[] }[] = [
     title: "Intelligence & Learning",
     items: [
       { label: "Dashboard", icon: LayoutDashboard, to: "/dashboard" },
-      { label: "Competency Matrix", icon: Radar },
+      { label: "Competency Assessment", icon: Radar },
       { label: "Skill Gap Analysis", icon: TrendingDown, badge: "3" },
       { label: "Learning Paths", icon: Compass },
       { label: "AI Assessment Quiz", icon: Sparkles },
@@ -111,10 +111,7 @@ export function DashboardSidebar({ className }: { className?: string }) {
         <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
           Federated Node v2.4 · Cadre ID DES-MH-2018
         </p>
-        <div className="mt-3 flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-          <ShieldCheck className="h-3.5 w-3.5 text-success" />
-          Prototype data only
-        </div>
+        
       </div>
     </aside>
   );

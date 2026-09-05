@@ -98,14 +98,17 @@ export function WelcomeHeader() {
 
 export function SummaryStats() {
   return (
-    <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+    <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {summaryStats.map((stat) => (
-        <div key={stat.label} className={cn(card, "p-5")}>
-          <div className="flex items-start justify-between gap-2">
-            <p className="text-sm font-semibold text-muted-foreground">{stat.label}</p>
+        <div key={stat.label} className={cn(card, "p-4")}>
+          <div className="flex items-start justify-between gap-3">
+            <p className="text-sm font-semibold text-muted-foreground">
+              {stat.label}
+            </p>
+
             <span
               className={cn(
-                "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold",
+                "inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold",
                 stat.tagTone === "success" && "bg-success/10 text-success",
                 stat.tagTone === "accent" && "bg-accent-soft text-accent",
                 stat.tagTone === "neutral" && "bg-muted text-muted-foreground",
@@ -119,16 +122,26 @@ export function SummaryStats() {
               {stat.tag}
             </span>
           </div>
-          <div className="mt-4 flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold tracking-tight text-foreground">
+
+          <div className="mt-3 flex items-baseline gap-2">
+            <span className="text-2xl font-extrabold tracking-tight text-foreground">
               {stat.value}
             </span>
-            <span className="text-xs font-medium text-muted-foreground">{stat.valueNote}</span>
+            <span className="text-xs font-medium text-muted-foreground">
+              {stat.valueNote}
+            </span>
           </div>
-          <div className="mt-4">
-            <ProgressBar value={stat.progress} />
-          </div>
-          <p className="mt-3 text-xs text-muted-foreground">{stat.footnote}</p>
+
+          {stat.label !== "Total Learning Hours" &&
+            stat.label !== "Active Paths" && (
+              <div className="mt-3">
+                <ProgressBar value={stat.progress} />
+              </div>
+  )}
+
+          <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+            {stat.footnote}
+          </p>
         </div>
       ))}
     </section>
@@ -138,34 +151,53 @@ export function SummaryStats() {
 export function CompetencyOverview() {
   return (
     <section>
-      <h2 className="text-xl font-bold tracking-tight text-foreground">Competency Overview</h2>
+      <h2 className="text-xl font-bold tracking-tight text-foreground">
+        Competency Overview
+      </h2>
+
       <p className="mt-1 text-sm text-muted-foreground">
-        Multi-dimensional assessment across core statistical domains against MoSPI Cadre Standards.
+        Multi-dimensional assessment across core statistical domains against
+        MoSPI Cadre Standards.
       </p>
-      <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+
+      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {competencyDomains.map((domain) => {
           const Icon = iconMap[domain.icon] ?? BarChart3;
+
           return (
             <div key={domain.title} className={cn(card, "p-5")}>
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-foreground">
-                <Icon className="h-5 w-5" />
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-muted text-foreground">
+                <Icon className="h-4.5 w-4.5" />
               </span>
-              <h3 className="mt-4 text-base font-bold text-foreground">{domain.title}</h3>
+
+              <h3 className="mt-3 text-base font-bold text-foreground">
+                {domain.title}
+              </h3>
+
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                 {domain.description}
               </p>
-              <p className="mt-5 text-2xl font-extrabold tracking-tight text-foreground">
+
+              <p className="mt-4 text-2xl font-extrabold tracking-tight text-foreground">
                 {domain.score}%
               </p>
-              <div className="mt-3">
+
+              <div className="mt-2.5">
                 <ProgressBar
                   value={domain.score}
-                  tone={domain.tone === "destructive" ? "destructive" : domain.tone === "success" ? "success" : "accent"}
+                  tone={
+                    domain.tone === "destructive"
+                      ? "destructive"
+                      : domain.tone === "success"
+                        ? "success"
+                        : "accent"
+                  }
                 />
               </div>
+
               <p
                 className={cn(
-                  "mt-3 text-xs font-semibold",
+                  "mt-2.5 text-xs font-semibold",
                   domain.tone === "success" && "text-success",
                   domain.tone === "destructive" && "text-destructive",
                   domain.tone === "neutral" && "text-muted-foreground",
@@ -183,32 +215,48 @@ export function CompetencyOverview() {
 
 export function CompetencyRadar() {
   return (
-    <div className={cn(card, "p-6")}>
+    <div className={cn(card, "p-5 lg:p-6")}>
       <h2 className="text-lg font-bold tracking-tight text-foreground">
         8-Dimension Competency Radar
       </h2>
+
       <p className="mt-1 text-sm text-muted-foreground">
         Officer Profile vs Standard DES Cadre Requirement
       </p>
 
-      <div className="mt-4 flex flex-wrap items-center gap-5 text-xs font-semibold text-muted-foreground">
+      <div className="mt-3 flex flex-wrap items-center gap-5 text-xs font-semibold text-muted-foreground">
         <span className="inline-flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-full bg-accent" /> Current
+          <span className="h-2.5 w-2.5 rounded-full bg-accent" />
+          Current
         </span>
+
         <span className="inline-flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-full bg-foreground/40" /> Cadre Target
+          <span className="h-2.5 w-2.5 rounded-full bg-foreground/40" />
+          Cadre Target
         </span>
       </div>
 
-      <div className="mt-2 h-[340px] w-full">
+      <div className="mt-1 h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <RadarChart data={radarData} outerRadius="72%">
+          <RadarChart data={radarData} outerRadius="70%">
             <PolarGrid stroke="var(--color-border)" />
+
             <PolarAngleAxis
               dataKey="dimension"
-              tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
+              tick={{
+                fill: "var(--color-muted-foreground)",
+                fontSize: 11,
+              }}
             />
-            <PolarRadiusAxis angle={90} domain={[0, 100]} tick={false} axisLine={false} tickCount={5} />
+
+            <PolarRadiusAxis
+              angle={90}
+              domain={[0, 100]}
+              tick={false}
+              axisLine={false}
+              tickCount={5}
+            />
+
             <RechartRadar
               name="Cadre Target"
               dataKey="target"
@@ -217,6 +265,7 @@ export function CompetencyRadar() {
               fillOpacity={0.12}
               isAnimationActive={false}
             />
+
             <RechartRadar
               name="Current"
               dataKey="current"
@@ -229,7 +278,7 @@ export function CompetencyRadar() {
         </ResponsiveContainer>
       </div>
 
-      <div className="mt-2 flex flex-wrap gap-2">
+      <div className="mt-1 flex flex-wrap gap-2">
         {radarLegend.map((entry) => (
           <span
             key={entry.label}
@@ -245,18 +294,23 @@ export function CompetencyRadar() {
         ))}
       </div>
 
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
-        <p className="text-xs text-muted-foreground">Verified via NSSTA Q4 Cadre Evaluation</p>
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
+        <p className="text-xs text-muted-foreground">
+          Verified via NSSTA Q4 Cadre Evaluation
+        </p>
+
         <button
           type="button"
           className="inline-flex items-center gap-1.5 text-xs font-bold text-accent hover:underline"
         >
-          View Full Audit <ArrowRight className="h-3.5 w-3.5" />
+          View Full Audit
+          <ArrowRight className="h-3.5 w-3.5" />
         </button>
       </div>
     </div>
   );
 }
+
 
 export function PrioritySkillGaps() {
   return (
@@ -401,7 +455,133 @@ export function LearningPaths() {
     </section>
   );
 }
+export function SkillGapSummary() {
+  const visibleGaps = skillGaps.slice(0, 3);
 
+  return (
+    <section className={cn(card, "p-5 lg:p-6")}>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-lg font-bold tracking-tight text-foreground">
+            Skill Gap Summary
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Priority areas identified from your competency assessment.
+          </p>
+        </div>
+
+        <span className="shrink-0 rounded-full bg-destructive/10 px-2.5 py-1 text-[11px] font-bold text-destructive">
+          {skillGaps.length} priority gaps
+        </span>
+      </div>
+
+      <div className="mt-5 divide-y divide-border">
+        {visibleGaps.map((gap) => {
+          const Icon = iconMap[gap.icon] ?? Terminal;
+
+          return (
+            <div
+              key={gap.title}
+              className="flex items-center gap-3 py-3 first:pt-0 last:pb-0"
+            >
+              <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted text-foreground">
+                <Icon className="h-4 w-4" />
+              </span>
+
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-bold text-foreground">
+                  {gap.title}
+                </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Current {gap.current} · Required {gap.required}
+                </p>
+              </div>
+
+              <span
+                className={cn(
+                  "shrink-0 rounded-full px-2 py-1 text-[11px] font-bold",
+                  gap.critical
+                    ? "bg-destructive/10 text-destructive"
+                    : "bg-accent-soft text-accent",
+                )}
+              >
+                {gap.severity}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mt-4 border-t border-border pt-4">
+        <button
+          type="button"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-accent hover:underline"
+        >
+          View Full Skill Gap Analysis
+          <ArrowRight className="h-3.5 w-3.5" />
+        </button>
+      </div>
+    </section>
+  );
+}
+export function LearningPathSummary() {
+  const visiblePaths = learningPaths.slice(0, 2);
+
+  return (
+    <section className={cn(card, "p-5 lg:p-6")}>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-lg font-bold tracking-tight text-foreground">
+            Recommended Learning Paths
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Personalized recommendations based on your role and competency gaps.
+          </p>
+        </div>
+
+        <span className="shrink-0 rounded-full bg-accent-soft px-2.5 py-1 text-[11px] font-bold text-accent">
+          {learningPaths.length} recommended
+        </span>
+      </div>
+
+      <div className="mt-5 divide-y divide-border">
+        {visiblePaths.map((path) => (
+          <div
+            key={path.title}
+            className="flex items-center gap-3 py-3 first:pt-0 last:pb-0"
+          >
+            <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted text-foreground">
+              <GraduationCap className="h-4 w-4" />
+            </span>
+
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-bold text-foreground">
+                {path.title}
+              </p>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                {path.track} · {path.duration} · {path.provider}
+              </p>
+            </div>
+
+            <span className="shrink-0 text-xs font-bold text-accent">
+              {path.rating}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-4 border-t border-border pt-4">
+        <button
+          type="button"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-accent hover:underline"
+        >
+          View All Learning Paths
+          <ArrowRight className="h-3.5 w-3.5" />
+        </button>
+      </div>
+    </section>
+  );
+}
 export function DashboardFooter() {
   return (
     <footer className="border-t border-border pt-6 text-xs text-muted-foreground">
