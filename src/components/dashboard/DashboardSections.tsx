@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import {
   ArrowRight,
   ArrowUp,
@@ -13,7 +14,6 @@ import {
   Star,
   Terminal,
   TrendingUp,
-  Upload,
   ShieldCheck,
   type LucideIcon,
 } from "lucide-react";
@@ -47,7 +47,13 @@ const iconMap: Record<string, LucideIcon> = {
 
 const card = "rounded-xl border border-border bg-card shadow-sm";
 
-function ProgressBar({ value, tone = "accent" }: { value: number; tone?: "accent" | "success" | "destructive" }) {
+function ProgressBar({
+  value,
+  tone = "accent",
+}: {
+  value: number;
+  tone?: "accent" | "success" | "destructive";
+}) {
   return (
     <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
       <div
@@ -71,26 +77,22 @@ export function WelcomeHeader() {
           <ShieldCheck className="h-3.5 w-3.5 text-success" />
           {officer.cadre}
         </div>
+
         <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
           Welcome back, Ananya
         </h1>
+
         <p className="mt-2 text-sm text-muted-foreground">{officer.role}</p>
       </div>
+
       <div className="flex flex-wrap gap-3">
-        <button
-          type="button"
-          className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
-        >
-          <Upload className="h-4 w-4" />
-          Upload Circular
-        </button>
-        <button
-          type="button"
+        <Link
+          to="/ai-assessment-quiz"
           className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-accent-foreground transition-colors hover:bg-accent/90"
         >
           <Sparkles className="h-4 w-4" />
           Generate AI Quiz
-        </button>
+        </Link>
       </div>
     </section>
   );
@@ -111,7 +113,8 @@ export function SummaryStats() {
                 "inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold",
                 stat.tagTone === "success" && "bg-success/10 text-success",
                 stat.tagTone === "accent" && "bg-accent-soft text-accent",
-                stat.tagTone === "neutral" && "bg-muted text-muted-foreground",
+                stat.tagTone === "neutral" &&
+                  "bg-muted text-muted-foreground",
               )}
             >
               {stat.tagTone === "success" && stat.tag.startsWith("+") ? (
@@ -137,7 +140,7 @@ export function SummaryStats() {
               <div className="mt-3">
                 <ProgressBar value={stat.progress} />
               </div>
-  )}
+            )}
 
           <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
             {stat.footnote}
@@ -299,29 +302,31 @@ export function CompetencyRadar() {
           Verified via NSSTA Q4 Cadre Evaluation
         </p>
 
-        <button
-          type="button"
+        <Link
+          to="/competency-assessment"
           className="inline-flex items-center gap-1.5 text-xs font-bold text-accent hover:underline"
         >
           View Full Audit
           <ArrowRight className="h-3.5 w-3.5" />
-        </button>
+        </Link>
       </div>
     </div>
   );
 }
-
 
 export function PrioritySkillGaps() {
   return (
     <div className={cn(card, "p-6")}>
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-lg font-bold tracking-tight text-foreground">Priority Skill Gaps</h2>
+          <h2 className="text-lg font-bold tracking-tight text-foreground">
+            Priority Skill Gaps
+          </h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Mapped to Role Progression Requirements
           </p>
         </div>
+
         <span className="shrink-0 rounded-full bg-destructive/10 px-2.5 py-1 text-[11px] font-bold text-destructive">
           3 Needs Attention
         </span>
@@ -330,15 +335,23 @@ export function PrioritySkillGaps() {
       <ul className="mt-5 space-y-4">
         {skillGaps.map((gap) => {
           const Icon = iconMap[gap.icon] ?? Terminal;
+
           return (
-            <li key={gap.title} className="rounded-lg border border-border bg-muted/40 p-4">
+            <li
+              key={gap.title}
+              className="rounded-lg border border-border bg-muted/40 p-4"
+            >
               <div className="flex items-start gap-3">
                 <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-card text-foreground">
                   <Icon className="h-4.5 w-4.5" />
                 </span>
+
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-start justify-between gap-2">
-                    <h3 className="text-sm font-bold text-foreground">{gap.title}</h3>
+                    <h3 className="text-sm font-bold text-foreground">
+                      {gap.title}
+                    </h3>
+
                     <span
                       className={cn(
                         "rounded-full px-2 py-0.5 text-[11px] font-bold",
@@ -350,13 +363,22 @@ export function PrioritySkillGaps() {
                       {gap.severity}
                     </span>
                   </div>
+
                   <p className="mt-1.5 text-xs text-muted-foreground">
-                    Current: <span className="font-semibold text-foreground">{gap.current}</span> ·
-                    Required: <span className="font-semibold text-foreground">{gap.required}</span>
+                    Current:{" "}
+                    <span className="font-semibold text-foreground">
+                      {gap.current}
+                    </span>{" "}
+                    · Required:{" "}
+                    <span className="font-semibold text-foreground">
+                      {gap.required}
+                    </span>
                   </p>
+
                   <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
                     {gap.rationale}
                   </p>
+
                   <button
                     type="button"
                     className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:bg-muted"
@@ -382,38 +404,47 @@ export function LearningPaths() {
             AI-Recommended Learning Paths
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Personalized curriculum curated specifically for your role requirements and competency
-            deficits.
+            Personalized curriculum curated specifically for your role
+            requirements and competency deficits.
           </p>
         </div>
-        <button
-          type="button"
+
+        <Link
+          to="/learning-paths"
           className="inline-flex items-center gap-1.5 text-sm font-bold text-accent hover:underline"
         >
           View All Courses <ArrowRight className="h-4 w-4" />
-        </button>
+        </Link>
       </div>
 
       <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-3">
         {learningPaths.map((path) => (
-          <article key={path.title} className={cn(card, "flex flex-col p-5")}>
+          <article
+            key={path.title}
+            className={cn(card, "flex flex-col p-5")}
+          >
             <div className="flex items-center justify-between gap-2">
               <span className="rounded-full bg-muted px-2.5 py-1 text-[11px] font-bold text-muted-foreground">
                 {path.track}
               </span>
+
               <span className="inline-flex items-center gap-1 text-xs font-bold text-foreground">
                 <Star className="h-3.5 w-3.5 fill-accent text-accent" />
                 {path.rating}
               </span>
             </div>
 
-            <h3 className="mt-4 text-base font-bold leading-snug text-foreground">{path.title}</h3>
+            <h3 className="mt-4 text-base font-bold leading-snug text-foreground">
+              {path.title}
+            </h3>
 
             <div className="mt-4 rounded-lg border border-border bg-muted/40 p-3">
               <p className="text-[11px] font-bold uppercase tracking-wide text-accent">
                 Why this course?
               </p>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{path.reason}</p>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                {path.reason}
+              </p>
             </div>
 
             <div className="mt-4 flex flex-wrap gap-4 text-xs font-medium text-muted-foreground">
@@ -435,7 +466,10 @@ export function LearningPaths() {
             ) : null}
 
             <div className="mt-auto flex items-center justify-between gap-3 pt-5">
-              <span className="text-xs font-bold text-muted-foreground">{path.statusLabel}</span>
+              <span className="text-xs font-bold text-muted-foreground">
+                {path.statusLabel}
+              </span>
+
               <button
                 type="button"
                 className={cn(
@@ -446,7 +480,9 @@ export function LearningPaths() {
                 )}
               >
                 {path.cta}
-                {path.progress > 0 ? <Play className="h-3.5 w-3.5" /> : null}
+                {path.progress > 0 ? (
+                  <Play className="h-3.5 w-3.5" />
+                ) : null}
               </button>
             </div>
           </article>
@@ -455,6 +491,7 @@ export function LearningPaths() {
     </section>
   );
 }
+
 export function SkillGapSummary() {
   const visibleGaps = skillGaps.slice(0, 3);
 
@@ -465,6 +502,7 @@ export function SkillGapSummary() {
           <h2 className="text-lg font-bold tracking-tight text-foreground">
             Skill Gap Summary
           </h2>
+
           <p className="mt-1 text-sm text-muted-foreground">
             Priority areas identified from your competency assessment.
           </p>
@@ -492,6 +530,7 @@ export function SkillGapSummary() {
                 <p className="truncate text-sm font-bold text-foreground">
                   {gap.title}
                 </p>
+
                 <p className="mt-0.5 text-xs text-muted-foreground">
                   Current {gap.current} · Required {gap.required}
                 </p>
@@ -513,17 +552,18 @@ export function SkillGapSummary() {
       </div>
 
       <div className="mt-4 border-t border-border pt-4">
-        <button
-          type="button"
+        <Link
+          to="/skill-gap-analysis"
           className="inline-flex items-center gap-1.5 text-xs font-bold text-accent hover:underline"
         >
           View Full Skill Gap Analysis
           <ArrowRight className="h-3.5 w-3.5" />
-        </button>
+        </Link>
       </div>
     </section>
   );
 }
+
 export function LearningPathSummary() {
   const visiblePaths = learningPaths.slice(0, 2);
 
@@ -534,8 +574,10 @@ export function LearningPathSummary() {
           <h2 className="text-lg font-bold tracking-tight text-foreground">
             Recommended Learning Paths
           </h2>
+
           <p className="mt-1 text-sm text-muted-foreground">
-            Personalized recommendations based on your role and competency gaps.
+            Personalized recommendations based on your role and competency
+            gaps.
           </p>
         </div>
 
@@ -558,6 +600,7 @@ export function LearningPathSummary() {
               <p className="truncate text-sm font-bold text-foreground">
                 {path.title}
               </p>
+
               <p className="mt-0.5 text-xs text-muted-foreground">
                 {path.track} · {path.duration} · {path.provider}
               </p>
@@ -571,33 +614,39 @@ export function LearningPathSummary() {
       </div>
 
       <div className="mt-4 border-t border-border pt-4">
-        <button
-          type="button"
+        <Link
+          to="/learning-paths"
           className="inline-flex items-center gap-1.5 text-xs font-bold text-accent hover:underline"
         >
           View All Learning Paths
           <ArrowRight className="h-3.5 w-3.5" />
-        </button>
+        </Link>
       </div>
     </section>
   );
 }
+
 export function DashboardFooter() {
   return (
     <footer className="border-t border-border pt-6 text-xs text-muted-foreground">
       <p>
-        StatSkill AI · National Statistical Systems Training Academy (NSSTA) & iGOT Karmayogi
-        Compliant
+        StatSkill AI · National Statistical Systems Training Academy (NSSTA) &
+        iGOT Karmayogi Compliant
       </p>
+
       <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-medium">
         <button type="button" className="hover:text-foreground">
           Privacy Policy
         </button>
+
         <span>·</span>
+
         <button type="button" className="hover:text-foreground">
           Cadre Guidelines
         </button>
+
         <span>·</span>
+
         <button type="button" className="hover:text-foreground">
           Help & Support
         </button>

@@ -48,8 +48,10 @@ function DashboardPage() {
             className="absolute inset-0 bg-foreground/40"
             onClick={() => setMobileNavOpen(false)}
           />
+
           <div className="relative h-full w-72">
             <DashboardSidebar />
+
             <button
               type="button"
               aria-label="Close navigation"

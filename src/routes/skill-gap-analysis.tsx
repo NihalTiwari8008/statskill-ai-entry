@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
   AlertTriangle,
@@ -166,14 +166,16 @@ function SkillGapAnalysisPage() {
   }, [activeFilter]);
 
   const priorityGapCount = gapRows.filter(
-  (row) => row.gap < 0,
-).length;
+    (row) => row.gap < 0,
+  ).length;
 
-const highPriorityCount = gapRows.filter(
-  (row) => row.priority === "High",
-).length;
+  const highPriorityCount = gapRows.filter(
+    (row) => row.priority === "High",
+  ).length;
 
-  const domainsWithGaps = domainGaps.filter((domain) => domain.gap > 0).length;
+  const domainsWithGaps = domainGaps.filter(
+    (domain) => domain.gap > 0,
+  ).length;
 
   return (
     <div className="flex min-h-screen bg-muted/40">
@@ -216,12 +218,12 @@ const highPriorityCount = gapRows.filter(
             </section>
 
             {/* Summary */}
-            <section className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <section className="grid grid-cols-1 gap-3 md:grid-cols-3">
               <SummaryCard
                 label="Overall Competency"
                 value="74%"
                 detail="Current competency across mapped domains"
-                icon={<Target className="h-5 w-5" />}
+                icon={<Target className="h-4 w-4" />}
                 tone="accent"
               />
 
@@ -229,15 +231,15 @@ const highPriorityCount = gapRows.filter(
                 label="Priority Skill Gaps"
                 value={`${priorityGapCount}`}
                 detail={`${highPriorityCount} high-priority areas require focused development`}
-                icon={<AlertTriangle className="h-5 w-5" />}
+                icon={<AlertTriangle className="h-4 w-4" />}
                 tone="danger"
-            />
+              />
 
               <SummaryCard
                 label="Domains Affected"
                 value={`${domainsWithGaps}`}
                 detail="Domains currently below the role benchmark"
-                icon={<TrendingDown className="h-5 w-5" />}
+                icon={<TrendingDown className="h-4 w-4" />}
                 tone="neutral"
               />
             </section>
@@ -305,7 +307,8 @@ const highPriorityCount = gapRows.filter(
                         borderRadius: "10px",
                         border: "1px solid var(--color-border)",
                         background: "var(--color-card)",
-                        boxShadow: "0 8px 24px rgba(15, 41, 66, 0.08)",
+                        boxShadow:
+                          "0 8px 24px rgba(15, 41, 66, 0.08)",
                       }}
                     />
 
@@ -518,13 +521,13 @@ const highPriorityCount = gapRows.filter(
                 </p>
               </div>
 
-              <button
-                type="button"
+              <Link
+                to="/learning-paths"
                 className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-accent-foreground transition hover:bg-accent/90"
               >
                 View Personalized Learning Paths
                 <ArrowRight className="h-4 w-4" />
-              </button>
+              </Link>
             </section>
           </div>
         </main>
@@ -553,24 +556,28 @@ function SummaryCard({
   };
 
   return (
-    <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
-      <div className="flex items-start justify-between gap-3">
-        <p className="text-sm font-semibold text-muted-foreground">{label}</p>
+    <div className="rounded-lg border border-border bg-card px-4 py-3.5 shadow-sm">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-xs font-semibold text-muted-foreground">
+          {label}
+        </p>
 
         <span
-          className={`inline-flex h-9 w-9 items-center justify-center rounded-lg ${toneClasses[tone]}`}
+          className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${toneClasses[tone]}`}
         >
           {icon}
         </span>
       </div>
 
-      <p className="mt-5 text-3xl font-extrabold tracking-tight text-foreground">
-        {value}
-      </p>
+      <div className="mt-2 flex items-end gap-2">
+        <p className="text-2xl font-extrabold tracking-tight text-foreground">
+          {value}
+        </p>
 
-      <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-        {detail}
-      </p>
+        <p className="mb-0.5 text-[11px] leading-tight text-muted-foreground">
+          {detail}
+        </p>
+      </div>
     </div>
   );
 }

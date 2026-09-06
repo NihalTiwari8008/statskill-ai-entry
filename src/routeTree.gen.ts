@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AiAssessmentQuizRouteImport } from './routes/ai-assessment-quiz'
 import { Route as CompetencyAssessmentRouteImport } from './routes/competency-assessment'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as LearningPathsRouteImport } from './routes/learning-paths'
@@ -18,6 +19,11 @@ import { Route as SkillGapAnalysisRouteImport } from './routes/skill-gap-analysi
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiAssessmentQuizRoute = AiAssessmentQuizRouteImport.update({
+  id: '/ai-assessment-quiz',
+  path: '/ai-assessment-quiz',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CompetencyAssessmentRoute = CompetencyAssessmentRouteImport.update({
@@ -43,6 +49,7 @@ const SkillGapAnalysisRoute = SkillGapAnalysisRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ai-assessment-quiz': typeof AiAssessmentQuizRoute
   '/competency-assessment': typeof CompetencyAssessmentRoute
   '/dashboard': typeof DashboardRoute
   '/learning-paths': typeof LearningPathsRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ai-assessment-quiz': typeof AiAssessmentQuizRoute
   '/competency-assessment': typeof CompetencyAssessmentRoute
   '/dashboard': typeof DashboardRoute
   '/learning-paths': typeof LearningPathsRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ai-assessment-quiz': typeof AiAssessmentQuizRoute
   '/competency-assessment': typeof CompetencyAssessmentRoute
   '/dashboard': typeof DashboardRoute
   '/learning-paths': typeof LearningPathsRoute
@@ -67,6 +76,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/ai-assessment-quiz'
     | '/competency-assessment'
     | '/dashboard'
     | '/learning-paths'
@@ -74,6 +84,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/ai-assessment-quiz'
     | '/competency-assessment'
     | '/dashboard'
     | '/learning-paths'
@@ -81,6 +92,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/ai-assessment-quiz'
     | '/competency-assessment'
     | '/dashboard'
     | '/learning-paths'
@@ -89,6 +101,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AiAssessmentQuizRoute: typeof AiAssessmentQuizRoute
   CompetencyAssessmentRoute: typeof CompetencyAssessmentRoute
   DashboardRoute: typeof DashboardRoute
   LearningPathsRoute: typeof LearningPathsRoute
@@ -102,6 +115,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-assessment-quiz': {
+      id: '/ai-assessment-quiz'
+      path: '/ai-assessment-quiz'
+      fullPath: '/ai-assessment-quiz'
+      preLoaderRoute: typeof AiAssessmentQuizRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/competency-assessment': {
@@ -137,6 +157,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AiAssessmentQuizRoute: AiAssessmentQuizRoute,
   CompetencyAssessmentRoute: CompetencyAssessmentRoute,
   DashboardRoute: DashboardRoute,
   LearningPathsRoute: LearningPathsRoute,
