@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   ArrowRight,
@@ -46,10 +46,6 @@ function CompetencyAssessmentPage() {
     );
   }
 
-  
-
-  
-
   return (
     <div className="flex min-h-screen bg-muted/40">
       <DashboardSidebar className="sticky top-0 hidden h-screen lg:flex" />
@@ -61,52 +57,50 @@ function CompetencyAssessmentPage() {
           <div className="mx-auto max-w-6xl space-y-8">
             {/* Page Header */}
             <section>
-  {/* View Switcher */}
-  <div className="grid w-full max-w-2xl grid-cols-2 rounded-xl border border-border bg-card p-1.5 shadow-sm">
-    <button
-      type="button"
-      onClick={() => setActiveView("profile")}
-      className={
-        activeView === "profile"
-          ? "w-full rounded-lg bg-muted px-8 py-3.5 text-sm font-bold text-foreground shadow-sm"
-          : "w-full rounded-lg px-8 py-3.5 text-sm font-semibold text-muted-foreground transition hover:bg-muted/60 hover:text-foreground"
-      }
-    >
-      Build Your Profile
-    </button>
+              {/* View Switcher */}
+              <div className="grid w-full max-w-2xl grid-cols-2 rounded-xl border border-border bg-card p-1.5 shadow-sm">
+                <button
+                  type="button"
+                  onClick={() => setActiveView("profile")}
+                  className={
+                    activeView === "profile"
+                      ? "w-full rounded-lg bg-muted px-8 py-3.5 text-sm font-bold text-foreground shadow-sm"
+                      : "w-full rounded-lg px-8 py-3.5 text-sm font-semibold text-muted-foreground transition hover:bg-muted/60 hover:text-foreground"
+                  }
+                >
+                  Build Your Profile
+                </button>
 
-    <button
-      type="button"
-      onClick={() => setActiveView("assessment")}
-      className={
-        activeView === "assessment"
-          ? "w-full rounded-lg bg-accent px-8 py-3.5 text-sm font-bold text-accent-foreground shadow-sm"
-          : "w-full rounded-lg px-8 py-3.5 text-sm font-semibold text-muted-foreground transition hover:bg-muted/60 hover:text-foreground"
-      }
-    >
-      AI Competency Assessment
-    </button>
-  </div>
+                <button
+                  type="button"
+                  onClick={() => setActiveView("assessment")}
+                  className={
+                    activeView === "assessment"
+                      ? "w-full rounded-lg bg-accent px-8 py-3.5 text-sm font-bold text-accent-foreground shadow-sm"
+                      : "w-full rounded-lg px-8 py-3.5 text-sm font-semibold text-muted-foreground transition hover:bg-muted/60 hover:text-foreground"
+                  }
+                >
+                  AI Competency Assessment
+                </button>
+              </div>
 
-  {/* Page Heading */}
-  <div className="mt-7">
-    <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold text-muted-foreground">
-      <span className="h-2 w-2 rounded-full bg-accent" />
-      Competency Assessment
-    </div>
+              {/* Page Heading */}
+              <div className="mt-7">
+                <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold text-muted-foreground">
+                  <span className="h-2 w-2 rounded-full bg-accent" />
+                  Competency Assessment
+                </div>
 
-    <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
-      Build Your Competency Profile
-    </h1>
+                <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
+                  Build Your Competency Profile
+                </h1>
 
-    <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-      Tell us about your role, experience and existing skills so StatSkill
-      can assess your competencies and identify skill gaps.
-    </p>
-  </div>
-</section>
-
-            
+                <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                  Tell us about your role, experience and existing skills so StatSkill
+                  can assess your competencies and identify skill gaps.
+                </p>
+              </div>
+            </section>
 
             {/* Main content */}
             <div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
@@ -312,8 +306,6 @@ function CompetencyAssessmentPage() {
                       <Save className="h-4 w-4" />
                       Save Draft
                     </button>
-
-                    
                   </div>
                 </div>
               </aside>
@@ -455,31 +447,32 @@ function AssessmentResults({
 
         <main className="flex-1 px-4 py-8 lg:px-8 lg:py-10">
           <div className="mx-auto max-w-6xl space-y-8">
-           <div className="grid w-full max-w-2xl grid-cols-2 rounded-xl border border-border bg-card p-1.5 shadow-sm">
-  <button
-    type="button"
-    onClick={() => onViewChange("profile")}
-    className={
-      activeView === "profile"
-        ? "w-full rounded-lg bg-muted px-8 py-3.5 text-sm font-bold text-foreground shadow-sm"
-        : "w-full rounded-lg px-8 py-3.5 text-sm font-semibold text-muted-foreground transition hover:bg-muted/60 hover:text-foreground"
-    }
-  >
-    Build Your Profile
-  </button>
+            <div className="grid w-full max-w-2xl grid-cols-2 rounded-xl border border-border bg-card p-1.5 shadow-sm">
+              <button
+                type="button"
+                onClick={() => onViewChange("profile")}
+                className={
+                  activeView === "profile"
+                    ? "w-full rounded-lg bg-muted px-8 py-3.5 text-sm font-bold text-foreground shadow-sm"
+                    : "w-full rounded-lg px-8 py-3.5 text-sm font-semibold text-muted-foreground transition hover:bg-muted/60 hover:text-foreground"
+                }
+              >
+                Build Your Profile
+              </button>
 
-  <button
-    type="button"
-    onClick={() => onViewChange("assessment")}
-    className={
-      activeView === "assessment"
-        ? "w-full rounded-lg bg-accent px-8 py-3.5 text-sm font-bold text-accent-foreground shadow-sm"
-        : "w-full rounded-lg px-8 py-3.5 text-sm font-semibold text-muted-foreground transition hover:bg-muted/60 hover:text-foreground"
-    }
-  >
-    AI Competency Assessment
-  </button>
-</div>
+              <button
+                type="button"
+                onClick={() => onViewChange("assessment")}
+                className={
+                  activeView === "assessment"
+                    ? "w-full rounded-lg bg-accent px-8 py-3.5 text-sm font-bold text-accent-foreground shadow-sm"
+                    : "w-full rounded-lg px-8 py-3.5 text-sm font-semibold text-muted-foreground transition hover:bg-muted/60 hover:text-foreground"
+                }
+              >
+                AI Competency Assessment
+              </button>
+            </div>
+
             {/* Header */}
             <section>
               <div className="flex flex-wrap items-center justify-between gap-4">
@@ -579,7 +572,9 @@ function AssessmentResults({
                           : "rounded-full bg-destructive/10 px-2 py-1 text-[11px] font-bold text-destructive"
                       }
                     >
-                      {result.tone === "success" ? "Healthy" : "Attention"}
+                      {result.tone === "success"
+                        ? "Healthy"
+                        : "Attention"}
                     </span>
                   </div>
 
@@ -797,13 +792,13 @@ function AssessmentResults({
                   Review My Profile
                 </button>
 
-                <button
-                  type="button"
+                <Link
+                  to="/skill-gap-analysis"
                   className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground transition hover:bg-accent/90"
                 >
                   View My Skill Gaps
                   <ArrowRight className="h-4 w-4" />
-                </button>
+                </Link>
               </div>
             </section>
           </div>
