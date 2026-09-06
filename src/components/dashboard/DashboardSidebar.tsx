@@ -103,16 +103,7 @@ export function DashboardSidebar({ className }: { className?: string }) {
         ))}
       </nav>
 
-      <div className="border-t border-border px-6 py-5">
-        <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-          <span className="h-2 w-2 rounded-full bg-success" />
-          MoSPI-DES Sync Active
-        </div>
-        <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-          Federated Node v2.4 · Cadre ID DES-MH-2018
-        </p>
-        
-      </div>
+      
     </aside>
   );
 }
