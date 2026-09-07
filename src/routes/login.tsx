@@ -32,7 +32,7 @@ function LoginPage() {
     event.preventDefault();
 
     // Temporary frontend-only behavior.
-    // We will replace this with the backend login API.
+    // Backend authentication will replace this later.
     window.location.href = "/dashboard";
   };
 
@@ -40,11 +40,11 @@ function LoginPage() {
     <div className="min-h-screen bg-background">
       <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col lg:flex-row">
         {/* Left side */}
-        <section className="flex flex-1 flex-col justify-center px-6 py-12 lg:px-16">
+        <section className="flex flex-1 flex-col justify-start px-6 pt-10 pb-16 lg:px-16 lg:pt-12 lg:pb-20">
           <StatSkillWordmark />
 
-          <div className="mt-16 max-w-lg">
-            <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-foreground lg:text-5xl">
+          <div className="mt-20 max-w-lg lg:mt-20">
+            <h1 className="text-4xl font-extrabold leading-[1.1] tracking-tight text-foreground sm:text-5xl">
               Build Skills.
               <br />
               Close Gaps.
@@ -54,7 +54,7 @@ function LoginPage() {
               </span>
             </h1>
 
-            <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground">
+            <p className="mt-8 max-w-md text-base leading-relaxed text-muted-foreground">
               Sign in to access your competency profile, skill-gap analysis,
               personalized learning paths and AI-powered assessments.
             </p>
@@ -62,16 +62,20 @@ function LoginPage() {
         </section>
 
         {/* Right side */}
-        <section className="flex flex-1 items-center border-t border-border bg-card px-6 py-12 lg:border-l lg:border-t-0 lg:px-16">
+        <section className="flex flex-1 flex-col border-t border-border bg-card px-6 pt-10 pb-16 lg:border-l lg:border-t-0 lg:px-16 lg:pt-12 lg:pb-20">
+          {/* Back link */}
           <div className="mx-auto w-full max-w-md">
             <Link
               to="/"
-              className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+              className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to sign in options
             </Link>
+          </div>
 
+          {/* Login content */}
+          <div className="mx-auto mt-22 w-full max-w-md">
             <div>
               <h2 className="text-2xl font-bold tracking-tight text-foreground">
                 Sign in with Email
@@ -156,7 +160,7 @@ function LoginPage() {
                 </div>
               </div>
 
-              {/* Submit */}
+              {/* Sign in */}
               <button
                 type="submit"
                 className="flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
@@ -165,6 +169,7 @@ function LoginPage() {
               </button>
             </form>
 
+            {/* Divider */}
             <div className="my-7 flex items-center gap-4">
               <span className="h-px flex-1 bg-border" />
 
@@ -175,12 +180,13 @@ function LoginPage() {
               <span className="h-px flex-1 bg-border" />
             </div>
 
-            <Link
-              to="/"
+            {/* Government SSO */}
+            <button
+              type="button"
               className="flex w-full items-center justify-center gap-2 rounded-lg border border-input bg-card px-4 py-3 text-sm font-medium text-foreground transition hover:bg-muted"
             >
               Sign in with Government SSO / Parichay
-            </Link>
+            </button>
 
             <p className="mt-6 text-center text-xs leading-relaxed text-muted-foreground">
               Your role and permissions determine which StatSkill AI
