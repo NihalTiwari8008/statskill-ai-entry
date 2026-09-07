@@ -14,6 +14,7 @@ import { Route as AiAssessmentQuizRouteImport } from './routes/ai-assessment-qui
 import { Route as CompetencyAssessmentRouteImport } from './routes/competency-assessment'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as LearningPathsRouteImport } from './routes/learning-paths'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as SkillGapAnalysisRouteImport } from './routes/skill-gap-analysis'
 
 const IndexRoute = IndexRouteImport.update({
@@ -41,6 +42,11 @@ const LearningPathsRoute = LearningPathsRouteImport.update({
   path: '/learning-paths',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SkillGapAnalysisRoute = SkillGapAnalysisRouteImport.update({
   id: '/skill-gap-analysis',
   path: '/skill-gap-analysis',
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/competency-assessment': typeof CompetencyAssessmentRoute
   '/dashboard': typeof DashboardRoute
   '/learning-paths': typeof LearningPathsRoute
+  '/login': typeof LoginRoute
   '/skill-gap-analysis': typeof SkillGapAnalysisRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/competency-assessment': typeof CompetencyAssessmentRoute
   '/dashboard': typeof DashboardRoute
   '/learning-paths': typeof LearningPathsRoute
+  '/login': typeof LoginRoute
   '/skill-gap-analysis': typeof SkillGapAnalysisRoute
 }
 export interface FileRoutesById {
@@ -70,6 +78,7 @@ export interface FileRoutesById {
   '/competency-assessment': typeof CompetencyAssessmentRoute
   '/dashboard': typeof DashboardRoute
   '/learning-paths': typeof LearningPathsRoute
+  '/login': typeof LoginRoute
   '/skill-gap-analysis': typeof SkillGapAnalysisRoute
 }
 export interface FileRouteTypes {
@@ -80,6 +89,7 @@ export interface FileRouteTypes {
     | '/competency-assessment'
     | '/dashboard'
     | '/learning-paths'
+    | '/login'
     | '/skill-gap-analysis'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -88,6 +98,7 @@ export interface FileRouteTypes {
     | '/competency-assessment'
     | '/dashboard'
     | '/learning-paths'
+    | '/login'
     | '/skill-gap-analysis'
   id:
     | '__root__'
@@ -96,6 +107,7 @@ export interface FileRouteTypes {
     | '/competency-assessment'
     | '/dashboard'
     | '/learning-paths'
+    | '/login'
     | '/skill-gap-analysis'
   fileRoutesById: FileRoutesById
 }
@@ -105,6 +117,7 @@ export interface RootRouteChildren {
   CompetencyAssessmentRoute: typeof CompetencyAssessmentRoute
   DashboardRoute: typeof DashboardRoute
   LearningPathsRoute: typeof LearningPathsRoute
+  LoginRoute: typeof LoginRoute
   SkillGapAnalysisRoute: typeof SkillGapAnalysisRoute
 }
 
@@ -145,6 +158,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearningPathsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/skill-gap-analysis': {
       id: '/skill-gap-analysis'
       path: '/skill-gap-analysis'
@@ -161,6 +181,7 @@ const rootRouteChildren: RootRouteChildren = {
   CompetencyAssessmentRoute: CompetencyAssessmentRoute,
   DashboardRoute: DashboardRoute,
   LearningPathsRoute: LearningPathsRoute,
+  LoginRoute: LoginRoute,
   SkillGapAnalysisRoute: SkillGapAnalysisRoute,
 }
 export const routeTree = rootRouteImport

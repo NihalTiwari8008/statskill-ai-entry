@@ -193,13 +193,14 @@ function Index() {
             </div>
 
             {role === "learner" ? (
-              <Link
-                to="/dashboard"
+              <button
+                type="button"
+                onClick={() => mockAuth("Government SSO")}
                 className="mt-8 flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
               >
                 <Landmark className="h-4 w-4" />
                 Sign in with Government SSO / Parichay
-              </Link>
+              </button>
             ) : (
               <button
                 type="button"
@@ -226,14 +227,15 @@ function Index() {
             </div>
 
             {role === "learner" ? (
-  <Link
-    to="/dashboard"
-    className="flex w-full items-center justify-center gap-2 rounded-lg border border-input bg-card px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
-  >
-    <Mail className="h-4 w-4" />
-    Continue with Email
-  </Link>
-) : (
+ 
+              <Link
+                to="/login"
+                className="flex w-full items-center justify-center gap-2 rounded-lg border border-input bg-card px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+              >
+                <Mail className="h-4 w-4" />
+                Continue with Email
+              </Link>
+            ) : (
   <button
     type="button"
     onClick={() => mockAuth("Email sign-in")}

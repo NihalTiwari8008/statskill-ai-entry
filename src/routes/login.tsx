@@ -1,0 +1,194 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import {
+  ArrowLeft,
+  Eye,
+  EyeOff,
+  LockKeyhole,
+  Mail,
+} from "lucide-react";
+import { StatSkillWordmark } from "@/components/StatSkillLogo";
+
+export const Route = createFileRoute("/login")({
+  head: () => ({
+    meta: [
+      {
+        title: "Sign In — StatSkill AI",
+      },
+      {
+        name: "description",
+        content:
+          "Sign in to StatSkill AI to access your competency and personalized learning dashboard.",
+      },
+    ],
+  }),
+  component: LoginPage,
+});
+
+function LoginPage() {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    // Temporary frontend-only behavior.
+    // We will replace this with the backend login API.
+    window.location.href = "/dashboard";
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col lg:flex-row">
+        {/* Left side */}
+        <section className="flex flex-1 flex-col justify-center px-6 py-12 lg:px-16">
+          <StatSkillWordmark />
+
+          <div className="mt-16 max-w-lg">
+            <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-foreground lg:text-5xl">
+              Build Skills.
+              <br />
+              Close Gaps.
+              <br />
+              <span className="text-accent">
+                Strengthen the Workforce.
+              </span>
+            </h1>
+
+            <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground">
+              Sign in to access your competency profile, skill-gap analysis,
+              personalized learning paths and AI-powered assessments.
+            </p>
+          </div>
+        </section>
+
+        {/* Right side */}
+        <section className="flex flex-1 items-center border-t border-border bg-card px-6 py-12 lg:border-l lg:border-t-0 lg:px-16">
+          <div className="mx-auto w-full max-w-md">
+            <Link
+              to="/"
+              className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to sign in options
+            </Link>
+
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight text-foreground">
+                Sign in with Email
+              </h2>
+
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Enter your registered email and password to continue to
+                StatSkill AI.
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+              {/* Email */}
+              <div>
+                <label
+                  htmlFor="email"
+                  className="text-sm font-semibold text-foreground"
+                >
+                  Email Address
+                </label>
+
+                <div className="relative mt-2">
+                  <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="you@example.gov.in"
+                    autoComplete="email"
+                    required
+                    className="w-full rounded-lg border border-border bg-background py-3 pl-10 pr-4 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-accent focus:ring-2 focus:ring-accent/10"
+                  />
+                </div>
+              </div>
+
+              {/* Password */}
+              <div>
+                <div className="flex items-center justify-between gap-4">
+                  <label
+                    htmlFor="password"
+                    className="text-sm font-semibold text-foreground"
+                  >
+                    Password
+                  </label>
+
+                  <button
+                    type="button"
+                    className="text-xs font-semibold text-accent hover:underline"
+                  >
+                    Forgot Password?
+                  </button>
+                </div>
+
+                <div className="relative mt-2">
+                  <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    autoComplete="current-password"
+                    required
+                    className="w-full rounded-lg border border-border bg-background py-3 pl-10 pr-12 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-accent focus:ring-2 focus:ring-accent/10"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((value) => !value)}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                className="flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+              >
+                Sign In
+              </button>
+            </form>
+
+            <div className="my-7 flex items-center gap-4">
+              <span className="h-px flex-1 bg-border" />
+
+              <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                or
+              </span>
+
+              <span className="h-px flex-1 bg-border" />
+            </div>
+
+            <Link
+              to="/"
+              className="flex w-full items-center justify-center gap-2 rounded-lg border border-input bg-card px-4 py-3 text-sm font-medium text-foreground transition hover:bg-muted"
+            >
+              Sign in with Government SSO / Parichay
+            </Link>
+
+            <p className="mt-6 text-center text-xs leading-relaxed text-muted-foreground">
+              Your role and permissions determine which StatSkill AI
+              workspace you can access.
+            </p>
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}
