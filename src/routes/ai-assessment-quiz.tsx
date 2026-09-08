@@ -11,7 +11,6 @@ import {
   Flag,
   RotateCcw,
   Sparkles,
-  Target,
   Upload,
   XCircle,
 } from "lucide-react";
@@ -23,7 +22,8 @@ export const Route = createFileRoute("/ai-assessment-quiz")({
   component: AIAssessmentQuizPage,
 });
 
-type QuizView = "upload" | "quiz" | "results";
+type QuizMode = "diagnostic" | "post-learning";
+type QuizView = "setup" | "quiz" | "results";
 
 type QuizQuestion = {
   id: number;
@@ -133,8 +133,7 @@ const mockQuestions: QuizQuestion[] = [
   },
   {
     id: 7,
-    question:
-      "What is the main purpose of a sampling frame?",
+    question: "What is the main purpose of a sampling frame?",
     options: [
       "To list or identify the population units from which a sample can be selected.",
       "To calculate the final national accounts estimate.",
@@ -163,8 +162,7 @@ const mockQuestions: QuizQuestion[] = [
   },
   {
     id: 9,
-    question:
-      "What is the primary purpose of data validation rules?",
+    question: "What is the primary purpose of data validation rules?",
     options: [
       "To identify values or records that violate expected conditions or constraints.",
       "To remove the need for subject-matter review.",
@@ -223,8 +221,7 @@ const mockQuestions: QuizQuestion[] = [
   },
   {
     id: 13,
-    question:
-      "What is a key benefit of visualizing statistical data?",
+    question: "What is a key benefit of visualizing statistical data?",
     options: [
       "It can make patterns, trends, comparisons, and unusual observations easier to identify.",
       "It eliminates the need to inspect the underlying data.",
@@ -283,8 +280,7 @@ const mockQuestions: QuizQuestion[] = [
   },
   {
     id: 17,
-    question:
-      "What is the main purpose of a data dictionary?",
+    question: "What is the main purpose of a data dictionary?",
     options: [
       "To describe variables, definitions, formats, and other characteristics of a dataset.",
       "To perform statistical modelling automatically.",
@@ -298,8 +294,7 @@ const mockQuestions: QuizQuestion[] = [
   },
   {
     id: 18,
-    question:
-      "Which of the following is an example of a categorical variable?",
+    question: "Which of the following is an example of a categorical variable?",
     options: [
       "Department",
       "Annual income",
@@ -362,18 +357,29 @@ const mockInsights: CompetencyInsight[] = [
 ];
 
 function AIAssessmentQuizPage() {
-  const [view, setView] = useState<QuizView>("upload");
+  const [mode] = useState<QuizMode>(() => {
+    if (typeof window === "undefined") {
+      return "post-learning";
+    }
+
+    const params = new URLSearchParams(window.location.search);
+
+    return params.get("mode") === "diagnostic"
+      ? "diagnostic"
+      : "post-learning";
+  });
+
+  const isDiagnostic = mode === "diagnostic";
+
+  const [view, setView] = useState<QuizView>(
+    isDiagnostic ? "quiz" : "setup",
+  );
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [questionCount, setQuestionCount] = useState(10);
-  const [difficulty, setDifficulty] = useState("Intermediate");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [markedForReview, setMarkedForReview] = useState<number[]>([]);
 
-  const questions = useMemo(
-    () => mockQuestions.slice(0, questionCount),
-    [questionCount],
-  );
+  const questions = useMemo(() => mockQuestions, []);
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -402,11 +408,36 @@ function AIAssessmentQuizPage() {
     ? Math.round((correctCount / questions.length) * 100)
     : 0;
 
-  const handleGenerateQuiz = () => {
+  const startQuiz = () => {
     setCurrentQuestionIndex(0);
     setAnswers({});
     setMarkedForReview([]);
     setView("quiz");
+  };
+
+  const handlePostLearningGenerate = () => {
+    if (!selectedFile) {
+      return;
+    }
+
+    /*
+     * Temporary frontend behaviour.
+     *
+     * Later this button will send the selected learning material
+     * to the backend and request an AI-generated post-learning quiz.
+     */
+    startQuiz();
+  };
+
+  const handleDiagnosticStart = () => {
+    /*
+     * Temporary frontend behaviour.
+     *
+     * Later this action will retrieve the diagnostic quiz generated
+     * automatically by the backend from the learner's profile,
+     * role requirements and initial competency assessment.
+     */
+    startQuiz();
   };
 
   const handleAnswer = (optionIndex: number) => {
@@ -453,10 +484,14 @@ function AIAssessmentQuizPage() {
   };
 
   const handleRestart = () => {
-    setView("upload");
+    setView(isDiagnostic ? "quiz" : "setup");
     setCurrentQuestionIndex(0);
     setAnswers({});
     setMarkedForReview([]);
+
+    if (!isDiagnostic) {
+      setSelectedFile(null);
+    }
   };
 
   return (
@@ -468,20 +503,17 @@ function AIAssessmentQuizPage() {
 
         <main className="flex-1 px-4 py-6 lg:px-7 lg:py-7">
           <div className="mx-auto max-w-6xl space-y-5">
-            {view === "upload" && (
-              <UploadView
+            {view === "setup" && (
+              <PostLearningSetupView
                 selectedFile={selectedFile}
-                questionCount={questionCount}
-                difficulty={difficulty}
                 onFileSelect={setSelectedFile}
-                onQuestionCountChange={setQuestionCount}
-                onDifficultyChange={setDifficulty}
-                onGenerate={handleGenerateQuiz}
+                onGenerate={handlePostLearningGenerate}
               />
             )}
 
             {view === "quiz" && currentQuestion && (
               <QuizViewComponent
+                mode={mode}
                 questions={questions}
                 currentQuestion={currentQuestion}
                 currentQuestionIndex={currentQuestionIndex}
@@ -494,12 +526,17 @@ function AIAssessmentQuizPage() {
                 onJump={handleQuestionJump}
                 onToggleReview={handleToggleReview}
                 onSubmit={handleSubmit}
-                onBack={() => setView("upload")}
+                onBack={() => {
+                  if (!isDiagnostic) {
+                    setView("setup");
+                  }
+                }}
               />
             )}
 
             {view === "results" && (
               <ResultsView
+                mode={mode}
                 questions={questions}
                 answers={answers}
                 correctCount={correctCount}
@@ -516,197 +553,112 @@ function AIAssessmentQuizPage() {
   );
 }
 
-function UploadView({
+function PostLearningSetupView({
   selectedFile,
-  questionCount,
-  difficulty,
   onFileSelect,
-  onQuestionCountChange,
-  onDifficultyChange,
   onGenerate,
 }: {
   selectedFile: File | null;
-  questionCount: number;
-  difficulty: string;
   onFileSelect: (file: File | null) => void;
-  onQuestionCountChange: (count: number) => void;
-  onDifficultyChange: (value: string) => void;
   onGenerate: () => void;
 }) {
   return (
     <>
       <section>
-        <div className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-1 text-[11px] font-semibold text-muted-foreground">
-          <Sparkles className="h-3 w-3 text-accent" />
-          AI-Powered Assessment
-        </div>
-
-        <h1 className="mt-3 text-2xl font-bold tracking-tight text-foreground lg:text-3xl">
-          AI Assessment Quiz
+        <h1 className="text-2xl font-bold tracking-tight text-foreground lg:text-3xl">
+          Learning Assessment Quiz
         </h1>
-
-        <p className="mt-1.5 max-w-2xl text-sm leading-5 text-muted-foreground">
-          Upload learning material and generate an objective quiz to test
-          understanding and support personalized learning.
-        </p>
       </section>
 
-      <section className="grid grid-cols-1 gap-4 xl:grid-cols-12">
-        <div className="xl:col-span-7">
-          <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
-            <div className="flex items-start gap-3 border-b border-border pb-4">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted text-foreground">
-                <Upload className="h-4 w-4" />
-              </div>
-
-              <div>
-                <h2 className="text-base font-bold text-foreground">
-                  Upload Learning Material
-                </h2>
-
-                <p className="mt-0.5 text-xs text-muted-foreground">
-                  Add content for AI-generated assessment questions.
-                </p>
-              </div>
+      <section>
+        <div className="rounded-xl border border-border bg-card p-5 shadow-sm lg:p-6">
+          <div className="flex items-start gap-3 border-b border-border pb-4">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted text-foreground">
+              <Upload className="h-4 w-4" />
             </div>
 
-            <label className="mt-4 block cursor-pointer rounded-lg border-2 border-dashed border-border bg-muted/20 p-7 text-center transition hover:border-accent/40 hover:bg-muted/30">
-              <input
-                type="file"
-                accept=".pdf,.ppt,.pptx,.doc,.docx,.txt,.mp4,.mov,.avi"
-                className="hidden"
-                onChange={(event) => {
-                  const file = event.target.files?.[0] ?? null;
-                  onFileSelect(file);
-                }}
-              />
+            <div>
+              <h2 className="text-base font-bold text-foreground">
+                Upload Learning Material
+              </h2>
 
-              <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-lg bg-card text-accent shadow-sm">
-                <Upload className="h-4 w-4" />
-              </div>
-
-              <p className="mt-3 text-sm font-semibold text-foreground">
-                Drop your learning material here
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                Add the material you studied for AI-generated assessment questions.
               </p>
-
-              <p className="mt-1 text-xs text-muted-foreground">
-                PDF, PowerPoint, Word, text, or supported video
-              </p>
-
-              <span className="mt-3 inline-flex rounded-lg border border-border bg-card px-3.5 py-2 text-xs font-semibold text-foreground">
-                Choose File
-              </span>
-            </label>
-
-            {selectedFile && (
-              <div className="mt-3 flex items-center justify-between gap-3 rounded-lg border border-border bg-muted/40 px-3 py-2.5">
-                <div className="flex min-w-0 items-center gap-2.5">
-                  <FileText className="h-4 w-4 shrink-0 text-accent" />
-
-                  <div className="min-w-0">
-                    <p className="truncate text-xs font-semibold text-foreground">
-                      {selectedFile.name}
-                    </p>
-
-                    <p className="text-[11px] text-muted-foreground">
-                      Ready for assessment generation
-                    </p>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => onFileSelect(null)}
-                  className="shrink-0 rounded-md px-1.5 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
-                  aria-label="Remove file"
-                >
-                  ×
-                </button>
-              </div>
-            )}
+            </div>
           </div>
-        </div>
 
-        <div className="xl:col-span-5">
-          <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
-            <div className="flex items-start gap-3 border-b border-border pb-4">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted text-foreground">
-                <Target className="h-4 w-4" />
-              </div>
+          <label className="mt-4 block cursor-pointer rounded-lg border-2 border-dashed border-border bg-muted/20 p-7 text-center transition hover:border-accent/40 hover:bg-muted/30">
+            <input
+              type="file"
+              accept=".pdf,.ppt,.pptx,.doc,.docx,.txt,.mp4,.mov,.avi"
+              className="hidden"
+              onChange={(event) => {
+                const file = event.target.files?.[0] ?? null;
+                onFileSelect(file);
+              }}
+            />
 
-              <div>
-                <h2 className="text-base font-bold text-foreground">
-                  Quiz Settings
-                </h2>
-
-                <p className="mt-0.5 text-xs text-muted-foreground">
-                  Configure your assessment.
-                </p>
-              </div>
+            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-lg bg-card text-accent shadow-sm">
+              <Upload className="h-4 w-4" />
             </div>
 
-            <div className="mt-4 space-y-4">
-              <div>
-                <label
-                  htmlFor="question-count"
-                  className="text-xs font-semibold text-foreground"
-                >
-                  Number of questions
-                </label>
+            <p className="mt-3 text-sm font-semibold text-foreground">
+              Drop your learning material here
+            </p>
 
-                <select
-                  id="question-count"
-                  value={questionCount}
-                  onChange={(event) =>
-                    onQuestionCountChange(Number(event.target.value))
-                  }
-                  className="mt-1.5 h-10 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground outline-none focus:border-accent"
-                >
-                  <option value={10}>10 questions</option>
-                  <option value={20}>20 questions</option>
-                </select>
+            <p className="mt-1 text-xs text-muted-foreground">
+              PDF, PowerPoint, Word, text, or supported video
+            </p>
+
+            <span className="mt-3 inline-flex rounded-lg border border-border bg-card px-3.5 py-2 text-xs font-semibold text-foreground">
+              Choose File
+            </span>
+          </label>
+
+          {selectedFile && (
+            <div className="mt-3 flex items-center justify-between gap-3 rounded-lg border border-border bg-muted/40 px-3 py-2.5">
+              <div className="flex min-w-0 items-center gap-2.5">
+                <FileText className="h-4 w-4 shrink-0 text-accent" />
+
+                <div className="min-w-0">
+                  <p className="truncate text-xs font-semibold text-foreground">
+                    {selectedFile.name}
+                  </p>
+
+                  <p className="text-[11px] text-muted-foreground">
+                    Ready for assessment generation
+                  </p>
+                </div>
               </div>
-
-              <div>
-                <label
-                  htmlFor="difficulty"
-                  className="text-xs font-semibold text-foreground"
-                >
-                  Difficulty
-                </label>
-
-                <select
-                  id="difficulty"
-                  value={difficulty}
-                  onChange={(event) => onDifficultyChange(event.target.value)}
-                  className="mt-1.5 h-10 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground outline-none focus:border-accent"
-                >
-                  <option>Beginner</option>
-                  <option>Intermediate</option>
-                  <option>Advanced</option>
-                </select>
-              </div>
-
-              
 
               <button
                 type="button"
-                onClick={onGenerate}
-                disabled={!selectedFile}
-                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-accent px-4 text-sm font-semibold text-accent-foreground transition hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-50"
+                onClick={() => onFileSelect(null)}
+                className="shrink-0 rounded-md px-1.5 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
+                aria-label="Remove file"
               >
-                <Sparkles className="h-4 w-4" />
-                Generate AI Quiz
-                <ArrowRight className="h-4 w-4" />
+                ×
               </button>
-
-              {!selectedFile && (
-                <p className="text-center text-[11px] text-muted-foreground">
-                  Upload learning material to continue.
-                </p>
-              )}
             </div>
-          </div>
+          )}
+
+          <button
+            type="button"
+            onClick={onGenerate}
+            disabled={!selectedFile}
+            className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-accent px-4 text-sm font-semibold text-accent-foreground transition hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Sparkles className="h-4 w-4" />
+            Generate AI Quiz
+            <ArrowRight className="h-4 w-4" />
+          </button>
+
+          {!selectedFile && (
+            <p className="mt-2 text-center text-[11px] text-muted-foreground">
+              Upload learning material to continue.
+            </p>
+          )}
         </div>
       </section>
     </>
@@ -714,6 +666,7 @@ function UploadView({
 }
 
 function QuizViewComponent({
+  mode,
   questions,
   currentQuestion,
   currentQuestionIndex,
@@ -728,6 +681,7 @@ function QuizViewComponent({
   onSubmit,
   onBack,
 }: {
+  mode: QuizMode;
   questions: QuizQuestion[];
   currentQuestion: QuizQuestion;
   currentQuestionIndex: number;
@@ -742,8 +696,10 @@ function QuizViewComponent({
   onSubmit: () => void;
   onBack: () => void;
 }) {
+  const isDiagnostic = mode === "diagnostic";
   const isMarked = markedForReview.includes(currentQuestion.id);
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
+
   const progress = Math.round(
     ((currentQuestionIndex + 1) / questions.length) * 100,
   );
@@ -751,29 +707,24 @@ function QuizViewComponent({
   return (
     <>
       <section>
-        <button
-          type="button"
-          onClick={onBack}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" />
-          Back to Quiz Setup
-        </button>
+        {!isDiagnostic && (
+          <button
+            type="button"
+            onClick={onBack}
+            className="mb-3 inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Back to Quiz Setup
+          </button>
+        )}
 
-        <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-xs font-medium text-accent">
-              AI Assessment Quiz
-            </p>
-
-            <h1 className="mt-1 text-2xl font-bold tracking-tight text-foreground">
-              Adaptive Statistical Assessment
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">
+              {isDiagnostic
+                ? "Current Competency Diagnostic"
+                : "Learning Assessment Quiz"}
             </h1>
-
-            <p className="mt-1 text-xs leading-5 text-muted-foreground">
-              Answer the questions and see how your performance maps to
-              competency areas.
-            </p>
           </div>
 
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
@@ -791,11 +742,15 @@ function QuizViewComponent({
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="truncate text-sm font-bold text-foreground">
-              Learning Material Assessment
+              {isDiagnostic
+                ? "Diagnostic Competency Quiz"
+                : "Post-Learning Quiz"}
             </p>
 
             <p className="mt-0.5 text-[11px] text-muted-foreground">
-              Questions generated from your uploaded content
+              {isDiagnostic
+                ? "Questions generated from your competency assessment context."
+                : "Questions generated from your uploaded learning material."}
             </p>
           </div>
 
@@ -858,8 +813,7 @@ function QuizViewComponent({
 
             <div className="mt-5 space-y-2.5">
               {currentQuestion.options.map((option, index) => {
-                const selected =
-                  answers[currentQuestion.id] === index;
+                const selected = answers[currentQuestion.id] === index;
 
                 return (
                   <button
@@ -997,6 +951,7 @@ function QuizViewComponent({
 }
 
 function ResultsView({
+  mode,
   questions,
   answers,
   correctCount,
@@ -1005,6 +960,7 @@ function ResultsView({
   score,
   onRestart,
 }: {
+  mode: QuizMode;
   questions: QuizQuestion[];
   answers: Record<number, number>;
   correctCount: number;
@@ -1013,29 +969,29 @@ function ResultsView({
   score: number;
   onRestart: () => void;
 }) {
+  const isDiagnostic = mode === "diagnostic";
+
   const feedback =
     score >= 80
-      ? "Strong performance across the assessed material. Continue with targeted learning to reinforce weaker competency areas."
+      ? "Strong performance across the assessed competency areas."
       : score >= 60
-        ? "Good progress. Targeted practice in weaker competency areas can strengthen your overall performance."
-        : "This assessment highlights competency areas that would benefit from additional learning and practice.";
+        ? "Good progress. Targeted practice in weaker competency areas can strengthen your current capability."
+        : "The assessment highlights competency areas that would benefit from additional learning and practice.";
 
   return (
     <>
       <section>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-xs font-medium text-accent">
-              Assessment Results
-            </p>
+           
 
             <h1 className="mt-1 text-2xl font-bold tracking-tight text-foreground lg:text-3xl">
-              Quiz Results
+              {isDiagnostic
+                ? "Current Competency Results"
+                : "Learning Assessment Results"}
             </h1>
 
-            <p className="mt-1 text-xs leading-5 text-muted-foreground">
-              Review your performance, competency insights, and answers.
-            </p>
+            
           </div>
 
           <button
@@ -1044,7 +1000,7 @@ function ResultsView({
             className="inline-flex w-fit items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground hover:bg-muted"
           >
             <RotateCcw className="h-3.5 w-3.5" />
-            Create Another Quiz
+            Restart Assessment
           </button>
         </div>
       </section>
@@ -1055,7 +1011,7 @@ function ResultsView({
             <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
               <span>Assessment Complete</span>
               <span className="h-1.5 w-1.5 rounded-full bg-success" />
-              <span className="text-success">Validated</span>
+              <span className="text-success">Evaluated</span>
             </div>
 
             <div className="mt-3 flex items-baseline gap-2">
@@ -1073,8 +1029,9 @@ function ResultsView({
             </div>
 
             <p className="mt-2 text-xs leading-5 text-muted-foreground">
-              Your responses have been evaluated against the assessment
-              answers.
+              {isDiagnostic
+                ? "This result can be used by the competency engine to refine your current competency after the diagnostic assessment."
+                : "This result can be used to measure learning progress and update competency after training."}
             </p>
 
             <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-muted">
@@ -1178,8 +1135,6 @@ function ResultsView({
             );
           })}
         </div>
-
-        
       </section>
 
       <section>
@@ -1261,32 +1216,61 @@ function ResultsView({
         </div>
       </section>
 
-      <section className="rounded-xl border border-orange-100 bg-orange-50/60 p-4">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-orange-700">
-              Next Learning
-            </p>
+      {isDiagnostic ? (
+        <section className="rounded-xl border border-accent/20 bg-accent-soft p-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-accent">
+                Next Step
+              </p>
 
-            <h2 className="mt-1 text-base font-bold text-foreground">
-              Continue building weaker competency areas
-            </h2>
+              <h2 className="mt-1 text-base font-bold text-foreground">
+                Continue to your skill gap analysis
+              </h2>
 
-            <p className="mt-1 text-xs leading-5 text-muted-foreground">
-              Learning recommendations can be refreshed using assessment
-              performance and identified skill gaps.
-            </p>
+              <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                Your diagnostic performance can be used to refine current
+                competency before personalized learning recommendations.
+              </p>
+            </div>
+
+            <Link
+              to="/skill-gap-analysis"
+              className="inline-flex w-fit shrink-0 items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-xs font-semibold text-accent-foreground hover:bg-accent/90"
+            >
+              View Skill Gaps
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
+        </section>
+      ) : (
+        <section className="rounded-xl border border-accent/20 bg-accent-soft p-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-accent">
+                Next Learning
+              </p>
 
-          <Link
-            to="/learning-paths"
-            className="inline-flex w-fit shrink-0 items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-xs font-semibold text-accent-foreground hover:bg-accent/90"
-          >
-            View Learning Paths
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
-        </div>
-      </section>
+              <h2 className="mt-1 text-base font-bold text-foreground">
+                Continue building weaker competency areas
+              </h2>
+
+              <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                This assessment can be used to measure learning progress and
+                update your competency after training.
+              </p>
+            </div>
+
+            <Link
+              to="/learning-paths"
+              className="inline-flex w-fit shrink-0 items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-xs font-semibold text-accent-foreground hover:bg-accent/90"
+            >
+              View Learning Paths
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        </section>
+      )}
     </>
   );
 }
@@ -1326,9 +1310,7 @@ function MetricCard({
         {value}
       </p>
 
-      <p className="mt-0.5 text-[10px] text-muted-foreground">
-        {detail}
-      </p>
+      <p className="mt-0.5 text-[10px] text-muted-foreground">{detail}</p>
     </div>
   );
 }
