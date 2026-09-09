@@ -23,6 +23,7 @@ import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { DashboardTopBar } from "@/components/dashboard/DashboardTopBar";
 import { getCurrentUserProfile } from "@/lib/current-user";
 import {
+  getOverallCompetency,
   getSkillGapDomains,
   getSkillGapRows,
   type SkillGapDomain,
@@ -100,8 +101,6 @@ function SkillGapAnalysisPage() {
                   Understand Your Skill Gaps
                 </h1>
 
-                
-
                 <p className="mt-3 text-xs font-medium text-muted-foreground">
                   {currentUser.currentAssignment
                     ? `Current assignment: ${currentUser.currentAssignment}`
@@ -118,7 +117,7 @@ function SkillGapAnalysisPage() {
             <section className="grid grid-cols-1 gap-3 md:grid-cols-3">
               <SummaryCard
                 label="Overall Competency"
-                value="74%"
+                value={`${getOverallCompetency()}%`}
                 detail="Current competency across mapped domains"
                 icon={<Target className="h-4 w-4" />}
                 tone="accent"
@@ -476,7 +475,6 @@ function PriorityBadge({
     <span
       className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold ${className}`}
     >
-      <ChevronDown className="h-3.5 w-3.5 rotate-[-45deg]" />
       {priority}
     </span>
   );
