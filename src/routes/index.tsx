@@ -236,14 +236,14 @@ function Index() {
                 Continue with Email
               </Link>
             ) : (
-  <button
-    type="button"
-    onClick={() => mockAuth("Email sign-in")}
+  <Link
+    to="/login"
+    search={{ role: "admin" }}
     className="flex w-full items-center justify-center gap-2 rounded-lg border border-input bg-card px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
   >
     <Mail className="h-4 w-4" />
     Continue with Email
-  </button>
+  </Link>
 )}
 
             {status && (

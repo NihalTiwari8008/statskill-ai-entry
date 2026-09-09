@@ -10,6 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminAnalyticsRouteImport } from './routes/admin-analytics'
+import { Route as AdminDashboardRouteImport } from './routes/admin-dashboard'
+import { Route as AdminSkillDemandRouteImport } from './routes/admin-skill-demand'
+import { Route as AdminTrainingProgressRouteImport } from './routes/admin-training-progress'
+import { Route as AdminWorkforceCompetenciesRouteImport } from './routes/admin-workforce-competencies'
 import { Route as AiAssessmentQuizRouteImport } from './routes/ai-assessment-quiz'
 import { Route as CompetencyAssessmentRouteImport } from './routes/competency-assessment'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -22,6 +27,32 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
+  id: '/admin-analytics',
+  path: '/admin-analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminDashboardRoute = AdminDashboardRouteImport.update({
+  id: '/admin-dashboard',
+  path: '/admin-dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSkillDemandRoute = AdminSkillDemandRouteImport.update({
+  id: '/admin-skill-demand',
+  path: '/admin-skill-demand',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminTrainingProgressRoute = AdminTrainingProgressRouteImport.update({
+  id: '/admin-training-progress',
+  path: '/admin-training-progress',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminWorkforceCompetenciesRoute =
+  AdminWorkforceCompetenciesRouteImport.update({
+    id: '/admin-workforce-competencies',
+    path: '/admin-workforce-competencies',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AiAssessmentQuizRoute = AiAssessmentQuizRouteImport.update({
   id: '/ai-assessment-quiz',
   path: '/ai-assessment-quiz',
@@ -55,6 +86,11 @@ const SkillGapAnalysisRoute = SkillGapAnalysisRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin-analytics': typeof AdminAnalyticsRoute
+  '/admin-dashboard': typeof AdminDashboardRoute
+  '/admin-skill-demand': typeof AdminSkillDemandRoute
+  '/admin-training-progress': typeof AdminTrainingProgressRoute
+  '/admin-workforce-competencies': typeof AdminWorkforceCompetenciesRoute
   '/ai-assessment-quiz': typeof AiAssessmentQuizRoute
   '/competency-assessment': typeof CompetencyAssessmentRoute
   '/dashboard': typeof DashboardRoute
@@ -64,6 +100,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin-analytics': typeof AdminAnalyticsRoute
+  '/admin-dashboard': typeof AdminDashboardRoute
+  '/admin-skill-demand': typeof AdminSkillDemandRoute
+  '/admin-training-progress': typeof AdminTrainingProgressRoute
+  '/admin-workforce-competencies': typeof AdminWorkforceCompetenciesRoute
   '/ai-assessment-quiz': typeof AiAssessmentQuizRoute
   '/competency-assessment': typeof CompetencyAssessmentRoute
   '/dashboard': typeof DashboardRoute
@@ -74,6 +115,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin-analytics': typeof AdminAnalyticsRoute
+  '/admin-dashboard': typeof AdminDashboardRoute
+  '/admin-skill-demand': typeof AdminSkillDemandRoute
+  '/admin-training-progress': typeof AdminTrainingProgressRoute
+  '/admin-workforce-competencies': typeof AdminWorkforceCompetenciesRoute
   '/ai-assessment-quiz': typeof AiAssessmentQuizRoute
   '/competency-assessment': typeof CompetencyAssessmentRoute
   '/dashboard': typeof DashboardRoute
@@ -85,6 +131,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin-analytics'
+    | '/admin-dashboard'
+    | '/admin-skill-demand'
+    | '/admin-training-progress'
+    | '/admin-workforce-competencies'
     | '/ai-assessment-quiz'
     | '/competency-assessment'
     | '/dashboard'
@@ -94,6 +145,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin-analytics'
+    | '/admin-dashboard'
+    | '/admin-skill-demand'
+    | '/admin-training-progress'
+    | '/admin-workforce-competencies'
     | '/ai-assessment-quiz'
     | '/competency-assessment'
     | '/dashboard'
@@ -103,6 +159,11 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/admin-analytics'
+    | '/admin-dashboard'
+    | '/admin-skill-demand'
+    | '/admin-training-progress'
+    | '/admin-workforce-competencies'
     | '/ai-assessment-quiz'
     | '/competency-assessment'
     | '/dashboard'
@@ -113,6 +174,11 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminAnalyticsRoute: typeof AdminAnalyticsRoute
+  AdminDashboardRoute: typeof AdminDashboardRoute
+  AdminSkillDemandRoute: typeof AdminSkillDemandRoute
+  AdminTrainingProgressRoute: typeof AdminTrainingProgressRoute
+  AdminWorkforceCompetenciesRoute: typeof AdminWorkforceCompetenciesRoute
   AiAssessmentQuizRoute: typeof AiAssessmentQuizRoute
   CompetencyAssessmentRoute: typeof CompetencyAssessmentRoute
   DashboardRoute: typeof DashboardRoute
@@ -128,6 +194,41 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin-analytics': {
+      id: '/admin-analytics'
+      path: '/admin-analytics'
+      fullPath: '/admin-analytics'
+      preLoaderRoute: typeof AdminAnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin-dashboard': {
+      id: '/admin-dashboard'
+      path: '/admin-dashboard'
+      fullPath: '/admin-dashboard'
+      preLoaderRoute: typeof AdminDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin-skill-demand': {
+      id: '/admin-skill-demand'
+      path: '/admin-skill-demand'
+      fullPath: '/admin-skill-demand'
+      preLoaderRoute: typeof AdminSkillDemandRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin-training-progress': {
+      id: '/admin-training-progress'
+      path: '/admin-training-progress'
+      fullPath: '/admin-training-progress'
+      preLoaderRoute: typeof AdminTrainingProgressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin-workforce-competencies': {
+      id: '/admin-workforce-competencies'
+      path: '/admin-workforce-competencies'
+      fullPath: '/admin-workforce-competencies'
+      preLoaderRoute: typeof AdminWorkforceCompetenciesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ai-assessment-quiz': {
@@ -177,6 +278,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminAnalyticsRoute: AdminAnalyticsRoute,
+  AdminDashboardRoute: AdminDashboardRoute,
+  AdminSkillDemandRoute: AdminSkillDemandRoute,
+  AdminTrainingProgressRoute: AdminTrainingProgressRoute,
+  AdminWorkforceCompetenciesRoute: AdminWorkforceCompetenciesRoute,
   AiAssessmentQuizRoute: AiAssessmentQuizRoute,
   CompetencyAssessmentRoute: CompetencyAssessmentRoute,
   DashboardRoute: DashboardRoute,

@@ -27,13 +27,17 @@ export const Route = createFileRoute("/login")({
 
 function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-
+  const role =
+    new URLSearchParams(window.location.search).get("role") === "admin"
+      ? "admin"
+      : "learner";
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     // Temporary frontend-only behavior.
     // Backend authentication will replace this later.
-    window.location.href = "/competency-assessment";
+    window.location.href =
+  role === "admin" ? "/admin-dashboard" : "/competency-assessment";
   };
 
   return (
