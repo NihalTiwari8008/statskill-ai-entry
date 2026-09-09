@@ -26,6 +26,11 @@ export type CompetencyDomain = {
   tone: "success" | "destructive" | "neutral";
 };
 
+export type CompetencyScore = {
+  name: string;
+  score: number | null;
+};
+
 export type RadarPoint = {
   dimension: string;
   current: number;
@@ -192,6 +197,25 @@ export function getRadarData() {
 
 export function getRadarLegend() {
   return mockRadarLegend;
+}
+
+/* ---------------- Learner competency assessment ---------------- */
+
+const mockDefaultCompetencies: CompetencyScore[] = [
+  { name: "Statistical", score: null },
+  { name: "Technical", score: null },
+  { name: "Digital Governance", score: null },
+  { name: "Behavioural", score: null },
+];
+
+const mockOverallCompetency = 74;
+
+export function getDefaultCompetencies() {
+  return mockDefaultCompetencies;
+}
+
+export function getOverallCompetency() {
+  return mockOverallCompetency;
 }
 
 /* ---------------- Learner skill gaps ---------------- */
