@@ -5,6 +5,7 @@ import { DashboardTopBar } from "@/components/dashboard/DashboardTopBar";
 import { CompetencyRadar } from "@/components/dashboard/DashboardSections";
 import { getCurrentUserProfile } from "@/lib/current-user";
 import {
+  getCompetencyAssessmentState,
   getDefaultCompetencies,
   type CompetencyScore,
 } from "@/lib/learner-data";
@@ -46,7 +47,7 @@ function CompetencyAssessmentPage() {
   const existingSkills = savedProfile.existingSkills;
   const workExperience = savedProfile.workExperience;
   const resumeFileName = savedProfile.resumeFileName;
-  const assessmentStarted = true;
+  const assessmentState = getCompetencyAssessmentState();
   const initialCompetencies = getDefaultCompetencies();
   const currentCompetencies = getDefaultCompetencies();
 
@@ -69,7 +70,9 @@ function CompetencyAssessmentPage() {
                 </p>
               </div>
               <span className="rounded-full bg-accent-soft px-3 py-1.5 text-xs font-bold text-accent">
-                {assessmentStarted ? "Assessment Ready" : "Processing"}
+                {assessmentState.status === "Ready"
+                  ? "Assessment Ready"
+                  : assessmentState.status}
               </span>
             </section>
 
