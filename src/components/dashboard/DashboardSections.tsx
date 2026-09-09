@@ -656,10 +656,6 @@ export function DashboardFooter() {
         <button type="button" className="hover:text-foreground">
           Help & Support
         </button>
-
-        <span>·</span>
-
-        <span>{officer.name}</span>
       </div>
     </footer>
   );
