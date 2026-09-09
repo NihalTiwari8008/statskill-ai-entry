@@ -9,8 +9,8 @@ import {
   OverallSkillGaps,
   SkillDemandPredictions,
   TrainingProgress,
-  mockAdminData,
 } from "@/components/admin/AdminDashboardSections";
+import { getAdminDashboardData } from "@/lib/admin-data";
 
 export const Route = createFileRoute("/admin-dashboard")({
   head: () => ({
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/admin-dashboard")({
 
 function AdminDashboardPage() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const data = mockAdminData;
+  const data = getAdminDashboardData();
 
   return (
     <div className="flex min-h-screen bg-muted/40">
@@ -76,7 +76,6 @@ function AdminDashboardPage() {
             </div>
 
             <CompetencyHeatmap data={data} />
-
             <SkillDemandPredictions data={data} />
           </div>
         </main>
