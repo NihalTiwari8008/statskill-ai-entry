@@ -33,7 +33,7 @@ function LoginPage() {
 
     // Temporary frontend-only behavior.
     // Backend authentication will replace this later.
-    window.location.href = "/dashboard";
+    window.location.href = "/competency-assessment";
   };
 
   return (

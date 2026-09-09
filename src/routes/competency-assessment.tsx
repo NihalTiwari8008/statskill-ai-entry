@@ -5,6 +5,7 @@ import {
   BriefcaseBusiness,
   Check,
   FileText,
+  Lock,
   GraduationCap,
   Upload,
   UserRound,
@@ -169,6 +170,15 @@ function CompetencyAssessmentPage() {
     (completedItems / profileItems.length) * 100,
   );
 
+  const profileReady =
+    profile.designation.trim().length > 0 &&
+    profile.department.trim().length > 0 &&
+    profile.currentAssignment.trim().length > 0 &&
+    profile.highestQualification.trim().length > 0 &&
+    profile.yearsOfExperience.trim().length > 0 &&
+    Boolean(resumeFile) &&
+    workExperience.trim().length > 0;
+
   if (activeView === "assessment") {
     return (
       <AssessmentPreparation
@@ -178,6 +188,9 @@ function CompetencyAssessmentPage() {
         resumeFile={resumeFile}
         assessmentStarted={assessmentStarted}
         onBackToProfile={() => setActiveView("profile")}
+        onGoToAssessment={() => setActiveView("assessment")}
+        onGoToProfile={() => setActiveView("profile")}
+        assessmentEnabled={profileReady}
       />
     );
   }
@@ -191,6 +204,15 @@ function CompetencyAssessmentPage() {
 
         <main className="flex-1 px-4 py-7 lg:px-8 lg:py-8">
           <div className="mx-auto max-w-6xl space-y-6">
+            <AssessmentTabs
+              activeView={activeView}
+              assessmentEnabled={profileReady}
+              onProfile={() => setActiveView("profile")}
+              onAssessment={() => {
+                if (profileReady) setActiveView("assessment");
+              }}
+            />
+
             <section>
               <h1 className="text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
                 Build Your Competency Profile
@@ -398,6 +420,9 @@ function AssessmentPreparation({
   resumeFile,
   assessmentStarted,
   onBackToProfile,
+  onGoToAssessment,
+  onGoToProfile,
+  assessmentEnabled,
   initialCompetencies = defaultCompetencies,
   currentCompetencies = defaultCompetencies,
 }: {
@@ -407,6 +432,9 @@ function AssessmentPreparation({
   resumeFile: File | null;
   assessmentStarted: boolean;
   onBackToProfile: () => void;
+  onGoToAssessment: () => void;
+  onGoToProfile: () => void;
+  assessmentEnabled: boolean;
   initialCompetencies?: CompetencyScore[];
   currentCompetencies?: CompetencyScore[];
 }) {
@@ -419,6 +447,13 @@ function AssessmentPreparation({
 
         <main className="flex-1 px-4 py-7 lg:px-8 lg:py-8">
           <div className="mx-auto max-w-6xl space-y-6">
+            <AssessmentTabs
+              activeView="assessment"
+              assessmentEnabled={assessmentEnabled}
+              onProfile={onGoToProfile}
+              onAssessment={onGoToAssessment}
+            />
+
             <section className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <button type="button" onClick={onBackToProfile} className="text-xs font-semibold text-muted-foreground hover:text-foreground">
@@ -542,6 +577,53 @@ function CompetencyGrid({ items }: { items: CompetencyScore[] }) {
           </p>
         </div>
       ))}
+    </div>
+  );
+}
+
+function AssessmentTabs({
+  activeView,
+  assessmentEnabled,
+  onProfile,
+  onAssessment,
+}: {
+  activeView: "profile" | "assessment";
+  assessmentEnabled: boolean;
+  onProfile: () => void;
+  onAssessment: () => void;
+}) {
+  return (
+    <div className="inline-flex w-full max-w-md rounded-lg border border-border bg-card p-1 shadow-sm">
+      <button
+        type="button"
+        onClick={onProfile}
+        className={`flex flex-1 items-center justify-center rounded-md px-4 py-2.5 text-sm font-semibold transition ${
+          activeView === "profile"
+            ? "bg-muted text-foreground"
+            : "text-muted-foreground hover:text-foreground"
+        }`}
+      >
+        Build Profile
+      </button>
+
+      <button
+        type="button"
+        onClick={onAssessment}
+        disabled={!assessmentEnabled}
+        aria-disabled={!assessmentEnabled}
+        className={`flex flex-1 items-center justify-center gap-1.5 rounded-md px-4 py-2.5 text-sm font-semibold transition ${
+          activeView === "assessment"
+            ? "bg-accent text-accent-foreground"
+            : assessmentEnabled
+              ? "text-muted-foreground hover:text-foreground"
+              : "cursor-not-allowed text-muted-foreground/50"
+        }`}
+      >
+        {!assessmentEnabled && activeView !== "assessment" ? (
+          <Lock className="h-3.5 w-3.5" />
+        ) : null}
+        Competency Assessment
+      </button>
     </div>
   );
 }
