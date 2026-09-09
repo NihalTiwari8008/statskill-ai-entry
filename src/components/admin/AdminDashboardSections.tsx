@@ -7,97 +7,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 
-type SkillGap = { skill: string; avg_gap: number };
-type HeatmapItem = {
-  department: string;
-  skill: string;
-  avg_level: number;
-};
-type DemandPrediction = {
-  skill: string;
-  demand: "High" | "Medium" | "Emerging";
-  reason?: string;
-};
-
-export type AdminDashboardData = {
-  total_employees: number;
-  overall_skill_gaps: SkillGap[];
-  competency_heatmap: HeatmapItem[];
-  training_progress_percent: number;
-  skill_demand_predictions?: DemandPrediction[];
-};
-
-export const mockAdminData: AdminDashboardData = {
-  total_employees: 30,
-  overall_skill_gaps: [
-    { skill: "Python", avg_gap: 1.8 },
-    { skill: "Data Visualization", avg_gap: 1.2 },
-    { skill: "SQL", avg_gap: 1.0 },
-    { skill: "AI / ML", avg_gap: 0.8 },
-  ],
-  competency_heatmap: [
-    {
-      department: "Ministry of Statistics",
-      skill: "Python",
-      avg_level: 2.1,
-    },
-    {
-      department: "Ministry of Statistics",
-      skill: "SQL",
-      avg_level: 2.8,
-    },
-    {
-      department: "Ministry of Statistics",
-      skill: "Data Visualization",
-      avg_level: 2.4,
-    },
-    {
-      department: "Directorate of Economics",
-      skill: "Python",
-      avg_level: 2.7,
-    },
-    {
-      department: "Directorate of Economics",
-      skill: "SQL",
-      avg_level: 3.3,
-    },
-    {
-      department: "Directorate of Economics",
-      skill: "Data Visualization",
-      avg_level: 3.0,
-    },
-    { department: "State Statistics", skill: "Python", avg_level: 1.9 },
-    { department: "State Statistics", skill: "SQL", avg_level: 2.2 },
-    {
-      department: "State Statistics",
-      skill: "Data Visualization",
-      avg_level: 2.5,
-    },
-  ],
-  training_progress_percent: 55,
-  skill_demand_predictions: [
-    {
-      skill: "Python",
-      demand: "High",
-      reason: "Growing data automation needs",
-    },
-    {
-      skill: "AI / ML",
-      demand: "High",
-      reason: "Increasing demand for intelligent analytics",
-    },
-    {
-      skill: "Cloud Computing",
-      demand: "Emerging",
-      reason: "Modernization of statistical infrastructure",
-    },
-    {
-      skill: "APIs & Open Data",
-      demand: "Medium",
-      reason: "Expanding data exchange requirements",
-    },
-  ],
-};
+import type { AdminDashboardData } from "@/lib/admin-data";
 
 function gapTone(gap: number) {
   if (gap >= 1.5) return "text-destructive";
@@ -117,12 +27,17 @@ export function AdminSummaryStats({ data }: { data: AdminDashboardData }) {
     (max, item) => Math.max(max, item.avg_gap),
     0,
   );
+
   const priorityGaps = data.overall_skill_gaps.filter(
     (item) => item.avg_gap >= 1.5,
   ).length;
 
   const stats = [
-    { label: "Total Employees", value: data.total_employees, icon: Users },
+    {
+      label: "Total Employees",
+      value: data.total_employees,
+      icon: Users,
+    },
     {
       label: "Priority Skill Gaps",
       value: priorityGaps,
@@ -195,6 +110,7 @@ export function OverallSkillGaps({ data }: { data: AdminDashboardData }) {
               <span className="font-semibold text-foreground">
                 {item.skill}
               </span>
+
               <span className={`font-bold ${gapTone(item.avg_gap)}`}>
                 {item.avg_gap.toFixed(1)}
               </span>
@@ -211,7 +127,6 @@ export function OverallSkillGaps({ data }: { data: AdminDashboardData }) {
           </div>
         ))}
       </div>
-
     </section>
   );
 }
@@ -224,6 +139,7 @@ export function TrainingProgress({ data }: { data: AdminDashboardData }) {
           <h2 className="text-base font-bold text-foreground">
             Training Progress
           </h2>
+
           <p className="mt-1 text-xs text-muted-foreground">
             Organization-wide learning completion.
           </p>
@@ -236,6 +152,7 @@ export function TrainingProgress({ data }: { data: AdminDashboardData }) {
         <p className="text-4xl font-extrabold tracking-tight text-foreground">
           {data.training_progress_percent}%
         </p>
+
         <p className="pb-1 text-xs font-medium text-muted-foreground">
           completed learning progress
         </p>
@@ -274,13 +191,15 @@ export function CompetencyHeatmap({
       data.competency_heatmap.map((item) => item.department),
     ),
   ];
+
   const skills = [
     ...new Set(data.competency_heatmap.map((item) => item.skill)),
   ];
 
   const levelFor = (department: string, skill: string) =>
     data.competency_heatmap.find(
-      (item) => item.department === department && item.skill === skill,
+      (item) =>
+        item.department === department && item.skill === skill,
     )?.avg_level ?? null;
 
   return (
@@ -289,6 +208,7 @@ export function CompetencyHeatmap({
         <h2 className="text-base font-bold text-foreground">
           Competency Heatmap
         </h2>
+
         <p className="mt-1 text-xs text-muted-foreground">
           Average competency level by department and skill.
         </p>
@@ -367,6 +287,7 @@ export function SkillDemandPredictions({
         <h2 className="text-base font-bold text-foreground">
           Skill Demand Predictions
         </h2>
+
         <p className="mt-1 text-xs text-muted-foreground">
           Skills likely to need greater workforce capacity.
         </p>

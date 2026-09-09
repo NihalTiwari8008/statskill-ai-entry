@@ -12,7 +12,11 @@ import {
 } from "lucide-react";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { AdminTopBar } from "@/components/admin/AdminTopBar";
-import { mockAdminData } from "@/components/admin/AdminDashboardSections";
+import {
+  getAdminAnalyticsRows,
+  getAdminDashboardData,
+  type AnalyticsRow,
+} from "@/lib/admin-data";
 
 export const Route = createFileRoute("/admin-analytics")({
   head: () => ({
@@ -28,38 +32,6 @@ export const Route = createFileRoute("/admin-analytics")({
   component: AdminAnalyticsPage,
 });
 
-type AnalyticsRow = {
-  department: string;
-  competency: number;
-  training: number;
-  gap: number;
-  outlook: "Improving" | "Stable" | "Needs Attention";
-};
-
-const analyticsRows: AnalyticsRow[] = [
-  {
-    department: "Ministry of Statistics",
-    competency: 3.8,
-    training: 72,
-    gap: 1.1,
-    outlook: "Improving",
-  },
-  {
-    department: "Directorate of Economics",
-    competency: 3.4,
-    training: 61,
-    gap: 1.4,
-    outlook: "Stable",
-  },
-  {
-    department: "State Statistics",
-    competency: 2.9,
-    training: 50,
-    gap: 1.9,
-    outlook: "Needs Attention",
-  },
-];
-
 function outlookTone(outlook: AnalyticsRow["outlook"]) {
   if (outlook === "Improving") return "bg-success/10 text-success";
   if (outlook === "Stable") return "bg-muted text-foreground";
@@ -70,8 +42,14 @@ function AdminAnalyticsPage() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [department, setDepartment] = useState("All Departments");
 
+  const analyticsRows = getAdminAnalyticsRows();
+  const adminDashboardData = getAdminDashboardData();
+
   const departments = useMemo(
-    () => ["All Departments", ...analyticsRows.map((row) => row.department)],
+    () => [
+      "All Departments",
+      ...analyticsRows.map((row) => row.department),
+    ],
     [],
   );
 
@@ -111,7 +89,8 @@ function AdminAnalyticsPage() {
     (row) => row.outlook === "Improving",
   ).length;
 
-  const overallProgress = mockAdminData.training_progress_percent;
+  const overallProgress =
+    adminDashboardData.training_progress_percent;
 
   return (
     <div className="flex min-h-screen bg-muted/40">
@@ -179,7 +158,9 @@ function AdminAnalyticsPage() {
                 <p className="mt-3 text-2xl font-extrabold text-foreground">
                   {avgCompetency}
                 </p>
-                <p className="mt-1 text-xs text-muted-foreground">out of 5.0</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  out of 5.0
+                </p>
               </div>
 
               <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
@@ -252,21 +233,26 @@ function AdminAnalyticsPage() {
                       ))}
                     </tr>
                   </thead>
+
                   <tbody className="divide-y divide-border">
                     {visibleRows.map((row) => (
                       <tr key={row.department}>
                         <td className="px-3 py-4 pl-0 text-sm font-semibold text-foreground">
                           {row.department}
                         </td>
+
                         <td className="px-3 py-4 text-sm font-semibold text-foreground">
                           {row.competency.toFixed(1)}
                         </td>
+
                         <td className="px-3 py-4 text-sm text-muted-foreground">
                           {row.training}%
                         </td>
+
                         <td className="px-3 py-4 text-sm font-semibold text-destructive">
                           {row.gap.toFixed(1)}
                         </td>
+
                         <td className="px-3 py-4 pr-0">
                           <span
                             className={`rounded-full px-2 py-1 text-[10px] font-bold ${outlookTone(row.outlook)}`}
@@ -304,12 +290,14 @@ function AdminAnalyticsPage() {
                       <span className="text-xs font-bold text-foreground">
                         {value}%
                       </span>
+
                       <div className="flex h-32 w-full items-end rounded-lg bg-muted/70 p-1">
                         <div
                           className="w-full rounded-md bg-accent"
                           style={{ height: `${value}%` }}
                         />
                       </div>
+
                       <span className="text-[10px] text-muted-foreground">
                         {["Q1", "Q2", "Q3", "Now"][index]}
                       </span>
@@ -328,6 +316,7 @@ function AdminAnalyticsPage() {
                       Areas that need administrative attention.
                     </p>
                   </div>
+
                   <TrendingDown className="h-4 w-4 text-muted-foreground" />
                 </div>
 
@@ -336,6 +325,7 @@ function AdminAnalyticsPage() {
                     <p className="text-sm font-semibold text-foreground">
                       Training completion below target
                     </p>
+
                     <p className="mt-1 text-xs text-muted-foreground">
                       Current workforce completion is {overallProgress}%.
                     </p>
@@ -345,6 +335,7 @@ function AdminAnalyticsPage() {
                     <p className="text-sm font-semibold text-foreground">
                       State Statistics needs attention
                     </p>
+
                     <p className="mt-1 text-xs text-muted-foreground">
                       Highest average skill gap in the current view.
                     </p>

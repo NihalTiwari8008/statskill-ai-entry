@@ -3,7 +3,6 @@ import { useMemo, useState } from "react";
 import {
   ArrowUpRight,
   BrainCircuit,
-  ChevronDown,
   Filter,
   Search,
   TrendingUp,
@@ -11,6 +10,10 @@ import {
 } from "lucide-react";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { AdminTopBar } from "@/components/admin/AdminTopBar";
+import {
+  getAdminSkillDemandData,
+  type DemandLevel,
+} from "@/lib/admin-data";
 
 export const Route = createFileRoute("/admin-skill-demand")({
   head: () => ({
@@ -25,68 +28,6 @@ export const Route = createFileRoute("/admin-skill-demand")({
   }),
   component: SkillDemandPage,
 });
-
-type DemandLevel = "High" | "Medium" | "Emerging";
-
-type SkillDemand = {
-  skill: string;
-  currentDemand: number;
-  predictedDemand: number;
-  growth: number;
-  priority: DemandLevel;
-  horizon: string;
-};
-
-const skillDemandData: SkillDemand[] = [
-  {
-    skill: "Python",
-    currentDemand: 72,
-    predictedDemand: 91,
-    growth: 26,
-    priority: "High",
-    horizon: "12–24 months",
-  },
-  {
-    skill: "Data Visualization",
-    currentDemand: 64,
-    predictedDemand: 82,
-    growth: 28,
-    priority: "High",
-    horizon: "12–24 months",
-  },
-  {
-    skill: "AI / Machine Learning",
-    currentDemand: 38,
-    predictedDemand: 76,
-    growth: 100,
-    priority: "Emerging",
-    horizon: "12–24 months",
-  },
-  {
-    skill: "Cloud Computing",
-    currentDemand: 31,
-    predictedDemand: 61,
-    growth: 97,
-    priority: "Emerging",
-    horizon: "24–36 months",
-  },
-  {
-    skill: "APIs & Open Data",
-    currentDemand: 45,
-    predictedDemand: 68,
-    growth: 51,
-    priority: "Medium",
-    horizon: "12–24 months",
-  },
-  {
-    skill: "GIS",
-    currentDemand: 49,
-    predictedDemand: 63,
-    growth: 29,
-    priority: "Medium",
-    horizon: "12–24 months",
-  },
-];
 
 function priorityTone(priority: DemandLevel) {
   if (priority === "High") {
@@ -111,7 +52,14 @@ function SkillDemandPage() {
   const [priority, setPriority] = useState("All Priorities");
   const [search, setSearch] = useState("");
 
-  const priorities = ["All Priorities", "High", "Medium", "Emerging"];
+  const skillDemandData = getAdminSkillDemandData();
+
+  const priorities = [
+    "All Priorities",
+    "High",
+    "Medium",
+    "Emerging",
+  ];
 
   const filteredSkills = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -119,6 +67,7 @@ function SkillDemandPage() {
     return skillDemandData.filter((item) => {
       const matchesPriority =
         priority === "All Priorities" || item.priority === priority;
+
       const matchesSearch =
         !query || item.skill.toLowerCase().includes(query);
 
@@ -171,6 +120,7 @@ function SkillDemandPage() {
                   <h1 className="text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
                     Skill Demand
                   </h1>
+
                   <p className="mt-2 text-sm text-muted-foreground">
                     Current and predicted demand across priority skills.
                   </p>
@@ -188,9 +138,15 @@ function SkillDemandPage() {
                 <p className="text-xs font-semibold text-muted-foreground">
                   High Priority
                 </p>
+
                 <p className="mt-3 text-2xl font-extrabold text-destructive">
-                  {skillDemandData.filter((item) => item.priority === "High").length}
+                  {
+                    skillDemandData.filter(
+                      (item) => item.priority === "High",
+                    ).length
+                  }
                 </p>
+
                 <p className="mt-1 text-xs text-muted-foreground">
                   skills requiring attention
                 </p>
@@ -200,9 +156,15 @@ function SkillDemandPage() {
                 <p className="text-xs font-semibold text-muted-foreground">
                   Emerging Skills
                 </p>
+
                 <p className="mt-3 text-2xl font-extrabold text-accent">
-                  {skillDemandData.filter((item) => item.priority === "Emerging").length}
+                  {
+                    skillDemandData.filter(
+                      (item) => item.priority === "Emerging",
+                    ).length
+                  }
                 </p>
+
                 <p className="mt-1 text-xs text-muted-foreground">
                   future-facing capability areas
                 </p>
@@ -212,9 +174,14 @@ function SkillDemandPage() {
                 <p className="text-xs font-semibold text-muted-foreground">
                   Fastest Growth
                 </p>
+
                 <p className="mt-3 text-2xl font-extrabold text-foreground">
-                  {Math.max(...skillDemandData.map((item) => item.growth))}%
+                  {Math.max(
+                    ...skillDemandData.map((item) => item.growth),
+                  )}
+                  %
                 </p>
+
                 <p className="mt-1 text-xs text-muted-foreground">
                   predicted demand increase
                 </p>
@@ -227,6 +194,7 @@ function SkillDemandPage() {
                   <h2 className="text-base font-bold text-foreground">
                     Demand Forecast
                   </h2>
+
                   <p className="mt-1 text-xs text-muted-foreground">
                     Compare current demand with predicted workforce need.
                   </p>
@@ -235,9 +203,12 @@ function SkillDemandPage() {
                 <div className="flex flex-col gap-2 sm:flex-row">
                   <div className="relative">
                     <Filter className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+
                     <select
                       value={priority}
-                      onChange={(event) => setPriority(event.target.value)}
+                      onChange={(event) =>
+                        setPriority(event.target.value)
+                      }
                       className="h-10 rounded-lg border border-border bg-background pl-9 pr-8 text-sm text-foreground outline-none focus:border-accent"
                     >
                       {priorities.map((item) => (
@@ -248,6 +219,7 @@ function SkillDemandPage() {
 
                   <div className="relative">
                     <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+
                     <input
                       value={search}
                       onChange={(event) => setSearch(event.target.value)}
@@ -273,16 +245,19 @@ function SkillDemandPage() {
                         <div className="min-w-0 xl:w-56">
                           <div className="flex items-center gap-2">
                             <BrainCircuit className="h-4 w-4 shrink-0 text-muted-foreground" />
+
                             <p className="truncate text-sm font-bold text-foreground">
                               {item.skill}
                             </p>
                           </div>
+
                           <div className="mt-2 flex items-center gap-2">
                             <span
                               className={`rounded-full px-2 py-1 text-[10px] font-bold ${priorityTone(item.priority)}`}
                             >
                               {item.priority}
                             </span>
+
                             <span className="text-[11px] text-muted-foreground">
                               {item.horizon}
                             </span>
@@ -295,14 +270,18 @@ function SkillDemandPage() {
                               <span className="text-xs font-semibold text-muted-foreground">
                                 Current demand
                               </span>
+
                               <span className="text-sm font-bold text-foreground">
                                 {item.currentDemand}%
                               </span>
                             </div>
+
                             <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">
                               <div
                                 className="h-full rounded-full bg-foreground/40"
-                                style={{ width: `${item.currentDemand}%` }}
+                                style={{
+                                  width: `${item.currentDemand}%`,
+                                }}
                               />
                             </div>
                           </div>
@@ -312,14 +291,18 @@ function SkillDemandPage() {
                               <span className="text-xs font-semibold text-muted-foreground">
                                 Predicted demand
                               </span>
+
                               <span className="text-sm font-bold text-foreground">
                                 {item.predictedDemand}%
                               </span>
                             </div>
+
                             <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">
                               <div
                                 className={`h-full rounded-full ${barTone(item.priority)}`}
-                                style={{ width: `${item.predictedDemand}%` }}
+                                style={{
+                                  width: `${item.predictedDemand}%`,
+                                }}
                               />
                             </div>
                           </div>
@@ -329,6 +312,7 @@ function SkillDemandPage() {
                           <span className="text-xs text-muted-foreground">
                             Growth
                           </span>
+
                           <span className="inline-flex items-center gap-1 text-sm font-extrabold text-success">
                             <ArrowUpRight className="h-4 w-4" />
                             {item.growth}%
@@ -347,6 +331,7 @@ function SkillDemandPage() {
                   <h2 className="text-base font-bold text-foreground">
                     Emerging Skills
                   </h2>
+
                   <p className="mt-1 text-xs text-muted-foreground">
                     Skills with the strongest projected growth.
                   </p>
@@ -365,10 +350,12 @@ function SkillDemandPage() {
                       <p className="text-sm font-semibold text-foreground">
                         {item.skill}
                       </p>
+
                       <span className="text-sm font-extrabold text-success">
                         +{item.growth}%
                       </span>
                     </div>
+
                     <p className="mt-1 text-xs text-muted-foreground">
                       Predicted demand: {item.predictedDemand}%
                     </p>
