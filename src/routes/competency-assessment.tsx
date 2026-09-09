@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { DashboardTopBar } from "@/components/dashboard/DashboardTopBar";
-
+import { CompetencyRadar } from "@/components/dashboard/DashboardSections";
 export const Route = createFileRoute("/competency-assessment")({
   head: () => ({
     meta: [
@@ -501,7 +501,7 @@ function AssessmentPreparation({
                 <CompetencyGrid items={currentCompetencies} />
               </div>
             </section>
-
+            <CompetencyRadar />
             <section className="rounded-xl border border-accent/20 bg-accent-soft p-6">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
