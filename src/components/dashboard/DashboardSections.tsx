@@ -334,7 +334,7 @@ export function PrioritySkillGaps() {
         </div>
 
         <span className="shrink-0 rounded-full bg-destructive/10 px-2.5 py-1 text-[11px] font-bold text-destructive">
-          3 Needs Attention
+          {skillGaps.length} Needs Attention
         </span>
       </div>
 
