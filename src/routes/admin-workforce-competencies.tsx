@@ -27,6 +27,40 @@ function levelLabel(level: number): LevelLabel {
   return "Needs Focus";
 }
 
+
+function csvCell(value: string | number) {
+  const text = String(value);
+  return `"${text.replace(/"/g, '""')}"`;
+}
+
+function exportCompetencies(
+  rows: Array<{ department: string; skill: string; avg_level: number }>,
+) {
+  const header = ["Department", "Skill", "Average Level"];
+
+  const lines = [
+    header.map(csvCell).join(","),
+    ...rows.map((row) =>
+      [row.department, row.skill, row.avg_level.toFixed(1)]
+        .map(csvCell)
+        .join(","),
+    ),
+  ];
+
+  const blob = new Blob([lines.join("\n")], {
+    type: "text/csv;charset=utf-8;",
+  });
+
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = "statskill-workforce-competencies.csv";
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(url);
+}
+
 function levelTone(level: number) {
   if (level >= 3.5) return "bg-success/15 text-success";
   if (level >= 2.5) return "bg-accent-soft text-accent";
@@ -133,6 +167,7 @@ function WorkforceCompetenciesPage() {
 
                 <button
                   type="button"
+                  onClick={() => exportCompetencies(mockAdminData.competency_heatmap)}
                   className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground transition hover:bg-muted"
                 >
                   <Download className="h-4 w-4" />
