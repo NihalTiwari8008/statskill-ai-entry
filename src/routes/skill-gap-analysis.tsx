@@ -21,6 +21,7 @@ import {
 
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { DashboardTopBar } from "@/components/dashboard/DashboardTopBar";
+import { getCurrentUserProfile } from "@/lib/current-user";
 
 export const Route = createFileRoute("/skill-gap-analysis")({
   head: () => ({
@@ -151,6 +152,7 @@ const domainGaps = [
 ];
 
 function SkillGapAnalysisPage() {
+  const currentUser = getCurrentUserProfile();
   const [activeFilter, setActiveFilter] = useState<Filter>("all");
 
   const filteredRows = useMemo(() => {
@@ -165,14 +167,10 @@ function SkillGapAnalysisPage() {
     return gapRows.filter((row) => row.category === activeFilter);
   }, [activeFilter]);
 
-  const priorityGapCount = gapRows.filter(
-    (row) => row.gap < 0,
-  ).length;
-
+  const priorityGapCount = gapRows.filter((row) => row.gap < 0).length;
   const highPriorityCount = gapRows.filter(
     (row) => row.priority === "High",
   ).length;
-
   const domainsWithGaps = domainGaps.filter(
     (domain) => domain.gap > 0,
   ).length;
@@ -186,38 +184,32 @@ function SkillGapAnalysisPage() {
 
         <main className="flex-1 px-4 py-8 lg:px-8 lg:py-10">
           <div className="mx-auto max-w-6xl space-y-8">
-            {/* Header */}
             <section>
               <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold text-muted-foreground">
                 <span className="h-2 w-2 rounded-full bg-accent" />
                 Skill Gap Analysis
               </div>
 
-              <div className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-                <div>
-                  <h1 className="text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
-                    Understand Your Skill Gaps
-                  </h1>
+              <div className="mt-4">
+                <h1 className="text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
+                  Understand Your Skill Gaps
+                </h1>
 
-                  <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-                    Review where your current competencies differ from the
-                    requirements of your role and identify the areas that need
-                    focused development.
-                  </p>
-                </div>
+               
 
-                <div className="rounded-lg border border-border bg-card px-4 py-3 text-right shadow-sm">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-                    Benchmark
-                  </p>
-                  <p className="mt-1 text-sm font-bold text-foreground">
-                    DSO Level 3
-                  </p>
-                </div>
+                <p className="mt-3 text-xs font-medium text-muted-foreground">
+                  {currentUser.currentAssignment
+                    ? `Current assignment: ${currentUser.currentAssignment}`
+                    : currentUser.designation
+                      ? `Role: ${currentUser.designation}`
+                      : "Profile context not yet provided"}
+                  {currentUser.department
+                    ? ` · ${currentUser.department}`
+                    : ""}
+                </p>
               </div>
             </section>
 
-            {/* Summary */}
             <section className="grid grid-cols-1 gap-3 md:grid-cols-3">
               <SummaryCard
                 label="Overall Competency"
@@ -244,7 +236,6 @@ function SkillGapAnalysisPage() {
               />
             </section>
 
-            {/* Domain Gap Chart */}
             <section className="rounded-xl border border-border bg-card p-5 shadow-sm lg:p-6">
               <div className="flex flex-col gap-3 border-b border-border pb-5 lg:flex-row lg:items-end lg:justify-between">
                 <div>
@@ -352,7 +343,6 @@ function SkillGapAnalysisPage() {
               </div>
             </section>
 
-            {/* Detailed Table */}
             <section className="rounded-xl border border-border bg-card shadow-sm">
               <div className="flex flex-col gap-4 border-b border-border p-5 lg:flex-row lg:items-end lg:justify-between lg:p-6">
                 <div>
@@ -371,7 +361,6 @@ function SkillGapAnalysisPage() {
                 </div>
               </div>
 
-              {/* Filters */}
               <div className="flex flex-wrap gap-2 border-b border-border px-5 py-4 lg:px-6">
                 <FilterButton
                   label="All"
@@ -476,8 +465,8 @@ function SkillGapAnalysisPage() {
                               +{row.gap} level
                             </span>
                           ) : (
-                            <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-bold text-muted-foreground">
-                              On Target
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs font-bold text-muted-foreground">
+                              On target
                             </span>
                           )}
                         </td>
@@ -489,45 +478,7 @@ function SkillGapAnalysisPage() {
                     ))}
                   </tbody>
                 </table>
-
-                {filteredRows.length === 0 && (
-                  <div className="px-6 py-12 text-center">
-                    <p className="text-sm font-semibold text-foreground">
-                      No matching skill gaps
-                    </p>
-
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      Try another filter.
-                    </p>
-                  </div>
-                )}
               </div>
-            </section>
-
-            {/* Personalized learning connection */}
-            <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-sm md:flex-row md:items-center md:justify-between lg:p-6">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-accent">
-                  Next step
-                </p>
-
-                <h2 className="mt-1 text-lg font-bold text-foreground">
-                  Turn your gaps into a learning plan
-                </h2>
-
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Explore personalized learning recommendations matched to
-                  your identified competency gaps.
-                </p>
-              </div>
-
-              <Link
-                to="/learning-paths"
-                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-accent-foreground transition hover:bg-accent/90"
-              >
-                View Personalized Learning Paths
-                <ArrowRight className="h-4 w-4" />
-              </Link>
             </section>
           </div>
         </main>
@@ -549,35 +500,33 @@ function SummaryCard({
   icon: React.ReactNode;
   tone: "accent" | "danger" | "neutral";
 }) {
-  const toneClasses = {
-    accent: "bg-accent-soft text-accent",
-    danger: "bg-destructive/10 text-destructive",
-    neutral: "bg-muted text-muted-foreground",
-  };
-
   return (
-    <div className="rounded-lg border border-border bg-card px-4 py-3.5 shadow-sm">
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-xs font-semibold text-muted-foreground">
-          {label}
-        </p>
-
+    <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
+      <div className="flex items-center gap-2">
         <span
-          className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${toneClasses[tone]}`}
+          className={
+            tone === "danger"
+              ? "inline-flex h-8 w-8 items-center justify-center rounded-lg bg-destructive/10 text-destructive"
+              : tone === "accent"
+                ? "inline-flex h-8 w-8 items-center justify-center rounded-lg bg-accent-soft text-accent"
+                : "inline-flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground"
+          }
         >
           {icon}
         </span>
-      </div>
 
-      <div className="mt-2 flex items-end gap-2">
-        <p className="text-2xl font-extrabold tracking-tight text-foreground">
-          {value}
-        </p>
-
-        <p className="mb-0.5 text-[11px] leading-tight text-muted-foreground">
-          {detail}
+        <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+          {label}
         </p>
       </div>
+
+      <p className="mt-3 text-2xl font-extrabold tracking-tight text-foreground">
+        {value}
+      </p>
+
+      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+        {detail}
+      </p>
     </div>
   );
 }
@@ -597,19 +546,11 @@ function FilterButton({
       onClick={onClick}
       className={
         active
-          ? "inline-flex items-center gap-1.5 rounded-lg bg-muted px-3.5 py-2 text-xs font-bold text-foreground shadow-sm"
-          : "inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3.5 py-2 text-xs font-semibold text-muted-foreground transition hover:bg-muted hover:text-foreground"
+          ? "inline-flex items-center gap-1 rounded-lg bg-accent px-3 py-1.5 text-xs font-bold text-accent-foreground"
+          : "inline-flex items-center gap-1 rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-semibold text-muted-foreground transition hover:bg-muted hover:text-foreground"
       }
     >
       {label}
-
-      {label === "Priority" ? (
-        <ChevronDown
-          className={`h-3.5 w-3.5 transition-transform ${
-            active ? "rotate-180" : ""
-          }`}
-        />
-      ) : null}
     </button>
   );
 }
@@ -619,28 +560,19 @@ function PriorityBadge({
 }: {
   priority: GapRow["priority"];
 }) {
-  if (priority === "High") {
-    return (
-      <span className="inline-flex items-center gap-1.5 text-xs font-bold text-destructive">
-        <span className="h-2 w-2 rounded-full bg-destructive" />
-        High
-      </span>
-    );
-  }
-
-  if (priority === "Moderate") {
-    return (
-      <span className="inline-flex items-center gap-1.5 text-xs font-bold text-accent">
-        <span className="h-2 w-2 rounded-full bg-accent" />
-        Moderate
-      </span>
-    );
-  }
+  const className =
+    priority === "High"
+      ? "bg-destructive/10 text-destructive"
+      : priority === "Moderate"
+        ? "bg-accent-soft text-accent"
+        : "bg-muted text-muted-foreground";
 
   return (
-    <span className="inline-flex items-center gap-1.5 text-xs font-bold text-success">
-      <span className="h-2 w-2 rounded-full bg-success" />
-      Low
+    <span
+      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold ${className}`}
+    >
+      <ChevronDown className="h-3.5 w-3.5 rotate-[-45deg]" />
+      {priority}
     </span>
   );
 }

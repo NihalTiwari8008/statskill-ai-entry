@@ -16,6 +16,7 @@ import { Route as AdminSkillDemandRouteImport } from './routes/admin-skill-deman
 import { Route as AdminTrainingProgressRouteImport } from './routes/admin-training-progress'
 import { Route as AdminWorkforceCompetenciesRouteImport } from './routes/admin-workforce-competencies'
 import { Route as AiAssessmentQuizRouteImport } from './routes/ai-assessment-quiz'
+import { Route as BuildProfileRouteImport } from './routes/build-profile'
 import { Route as CompetencyAssessmentRouteImport } from './routes/competency-assessment'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as LearningPathsRouteImport } from './routes/learning-paths'
@@ -58,6 +59,11 @@ const AiAssessmentQuizRoute = AiAssessmentQuizRouteImport.update({
   path: '/ai-assessment-quiz',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BuildProfileRoute = BuildProfileRouteImport.update({
+  id: '/build-profile',
+  path: '/build-profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CompetencyAssessmentRoute = CompetencyAssessmentRouteImport.update({
   id: '/competency-assessment',
   path: '/competency-assessment',
@@ -92,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/admin-training-progress': typeof AdminTrainingProgressRoute
   '/admin-workforce-competencies': typeof AdminWorkforceCompetenciesRoute
   '/ai-assessment-quiz': typeof AiAssessmentQuizRoute
+  '/build-profile': typeof BuildProfileRoute
   '/competency-assessment': typeof CompetencyAssessmentRoute
   '/dashboard': typeof DashboardRoute
   '/learning-paths': typeof LearningPathsRoute
@@ -106,6 +113,7 @@ export interface FileRoutesByTo {
   '/admin-training-progress': typeof AdminTrainingProgressRoute
   '/admin-workforce-competencies': typeof AdminWorkforceCompetenciesRoute
   '/ai-assessment-quiz': typeof AiAssessmentQuizRoute
+  '/build-profile': typeof BuildProfileRoute
   '/competency-assessment': typeof CompetencyAssessmentRoute
   '/dashboard': typeof DashboardRoute
   '/learning-paths': typeof LearningPathsRoute
@@ -121,6 +129,7 @@ export interface FileRoutesById {
   '/admin-training-progress': typeof AdminTrainingProgressRoute
   '/admin-workforce-competencies': typeof AdminWorkforceCompetenciesRoute
   '/ai-assessment-quiz': typeof AiAssessmentQuizRoute
+  '/build-profile': typeof BuildProfileRoute
   '/competency-assessment': typeof CompetencyAssessmentRoute
   '/dashboard': typeof DashboardRoute
   '/learning-paths': typeof LearningPathsRoute
@@ -137,6 +146,7 @@ export interface FileRouteTypes {
     | '/admin-training-progress'
     | '/admin-workforce-competencies'
     | '/ai-assessment-quiz'
+    | '/build-profile'
     | '/competency-assessment'
     | '/dashboard'
     | '/learning-paths'
@@ -151,6 +161,7 @@ export interface FileRouteTypes {
     | '/admin-training-progress'
     | '/admin-workforce-competencies'
     | '/ai-assessment-quiz'
+    | '/build-profile'
     | '/competency-assessment'
     | '/dashboard'
     | '/learning-paths'
@@ -165,6 +176,7 @@ export interface FileRouteTypes {
     | '/admin-training-progress'
     | '/admin-workforce-competencies'
     | '/ai-assessment-quiz'
+    | '/build-profile'
     | '/competency-assessment'
     | '/dashboard'
     | '/learning-paths'
@@ -180,6 +192,7 @@ export interface RootRouteChildren {
   AdminTrainingProgressRoute: typeof AdminTrainingProgressRoute
   AdminWorkforceCompetenciesRoute: typeof AdminWorkforceCompetenciesRoute
   AiAssessmentQuizRoute: typeof AiAssessmentQuizRoute
+  BuildProfileRoute: typeof BuildProfileRoute
   CompetencyAssessmentRoute: typeof CompetencyAssessmentRoute
   DashboardRoute: typeof DashboardRoute
   LearningPathsRoute: typeof LearningPathsRoute
@@ -238,6 +251,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AiAssessmentQuizRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/build-profile': {
+      id: '/build-profile'
+      path: '/build-profile'
+      fullPath: '/build-profile'
+      preLoaderRoute: typeof BuildProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/competency-assessment': {
       id: '/competency-assessment'
       path: '/competency-assessment'
@@ -284,6 +304,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminTrainingProgressRoute: AdminTrainingProgressRoute,
   AdminWorkforceCompetenciesRoute: AdminWorkforceCompetenciesRoute,
   AiAssessmentQuizRoute: AiAssessmentQuizRoute,
+  BuildProfileRoute: BuildProfileRoute,
   CompetencyAssessmentRoute: CompetencyAssessmentRoute,
   DashboardRoute: DashboardRoute,
   LearningPathsRoute: LearningPathsRoute,

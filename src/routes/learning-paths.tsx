@@ -17,6 +17,7 @@ import {
 
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { DashboardTopBar } from "@/components/dashboard/DashboardTopBar";
+import { getCurrentUserProfile } from "@/lib/current-user";
 
 export const Route = createFileRoute("/learning-paths")({
   component: LearningPathsPage,
@@ -248,6 +249,7 @@ function LearningPathCard({
 }
 
 function LearningPathsPage() {
+  const currentUser = getCurrentUserProfile();
   const [activeFilter, setActiveFilter] =
     useState<"All" | LearningPathStatus>("All");
 
@@ -291,10 +293,7 @@ function LearningPathsPage() {
                     Learning Paths
                   </h1>
 
-                  <p className="mt-1.5 max-w-2xl text-xs leading-5 text-muted-foreground">
-                    Learning recommendations tailored to your competency gaps,
-                    role, priorities, and development needs.
-                  </p>
+                  
                 </div>
 
                 <Link

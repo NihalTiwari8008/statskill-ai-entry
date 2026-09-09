@@ -1,7 +1,12 @@
+import { Link } from "@tanstack/react-router";
 import { Bell, ChevronDown, Menu, Search } from "lucide-react";
 import { officer } from "./data";
+import { getCurrentUserProfile, getUserInitials } from "@/lib/current-user";
 
 export function DashboardTopBar({ onMenuClick }: { onMenuClick?: () => void }) {
+  const currentUser = getCurrentUserProfile();
+  const userInitials = getUserInitials(currentUser.name);
+
   return (
     <header className="sticky top-0 z-20 flex h-16 items-center gap-4 border-b border-border bg-card/95 px-4 backdrop-blur lg:px-8">
       <button
@@ -37,23 +42,25 @@ export function DashboardTopBar({ onMenuClick }: { onMenuClick?: () => void }) {
 
         <div className="h-8 w-px bg-border" />
 
-        <button
-          type="button"
+        <Link
+          to="/build-profile"
           className="flex items-center gap-3 rounded-lg px-2 py-1.5 transition-colors hover:bg-muted"
         >
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-soft text-sm font-bold text-accent">
-            AS
+            {userInitials}
           </span>
+
           <span className="hidden text-left sm:block">
             <span className="block text-sm font-semibold leading-tight text-foreground">
-              {officer.name}
+              {currentUser.name}
             </span>
             <span className="block text-xs leading-tight text-muted-foreground">
-              {officer.shortRole}
+              {currentUser.designation || officer.shortRole}
             </span>
           </span>
+
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
-        </button>
+        </Link>
       </div>
     </header>
   );
