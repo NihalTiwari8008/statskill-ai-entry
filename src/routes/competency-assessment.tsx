@@ -1,10 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
 import { ArrowRight, FileText } from "lucide-react";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { DashboardTopBar } from "@/components/dashboard/DashboardTopBar";
 import { CompetencyRadar } from "@/components/dashboard/DashboardSections";
 import { getCurrentUserProfile } from "@/lib/current-user";
+import {
+  getDefaultCompetencies,
+  type CompetencyScore,
+} from "@/lib/learner-data";
 
 export const Route = createFileRoute("/competency-assessment")({
   head: () => ({
@@ -28,18 +31,6 @@ type ProfileData = {
   previousTraining: string;
 };
 
-type CompetencyScore = {
-  name: string;
-  score: number | null;
-};
-
-const defaultCompetencies: CompetencyScore[] = [
-  { name: "Statistical", score: null },
-  { name: "Technical", score: null },
-  { name: "Digital Governance", score: null },
-  { name: "Behavioural", score: null },
-];
-
 function CompetencyAssessmentPage() {
   const savedProfile = getCurrentUserProfile();
 
@@ -56,8 +47,9 @@ function CompetencyAssessmentPage() {
   const workExperience = savedProfile.workExperience;
   const resumeFileName = savedProfile.resumeFileName;
   const assessmentStarted = true;
-  const initialCompetencies = defaultCompetencies;
-  const currentCompetencies = defaultCompetencies;
+  const initialCompetencies = getDefaultCompetencies();
+  const currentCompetencies = getDefaultCompetencies();
+
   return (
     <div className="flex min-h-screen bg-muted/40">
       <DashboardSidebar className="sticky top-0 hidden h-screen lg:flex" />
