@@ -11,6 +11,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { StatSkillWordmark } from "@/components/StatSkillLogo";
+import { getSkillGapRows } from "@/lib/learner-data";
 import { cn } from "@/lib/utils";
 
 type NavItem = {
@@ -24,6 +25,11 @@ type NavItem = {
     | "/ai-assessment-quiz";
   badge?: string;
 };
+
+const getPriorityGapCount = () =>
+  getSkillGapRows().filter(
+    (row) => row.priority === "High" || row.priority === "Moderate",
+  ).length;
 
 const groups: { title: string; items: NavItem[] }[] = [
   {
@@ -39,7 +45,9 @@ const groups: { title: string; items: NavItem[] }[] = [
         label: "Skill Gap Analysis",
         icon: TrendingDown,
         to: "/skill-gap-analysis",
-        badge: "3",
+        get badge() {
+          return String(getPriorityGapCount());
+        },
       },
       {
         label: "Learning Paths",
