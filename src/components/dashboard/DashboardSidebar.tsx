@@ -11,7 +11,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { StatSkillWordmark } from "@/components/StatSkillLogo";
-import { getSkillGapRows } from "@/lib/learner-data";
+import { getSkillGapSummaries } from "@/lib/learner-data";
 import { cn } from "@/lib/utils";
 
 type NavItem = {
@@ -26,10 +26,7 @@ type NavItem = {
   badge?: string;
 };
 
-const getPriorityGapCount = () =>
-  getSkillGapRows().filter(
-    (row) => row.priority === "High" || row.priority === "Moderate",
-  ).length;
+const getPriorityGapCount = () => getSkillGapSummaries().length;
 
 const groups: { title: string; items: NavItem[] }[] = [
   {
