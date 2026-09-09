@@ -22,6 +22,12 @@ import {
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { DashboardTopBar } from "@/components/dashboard/DashboardTopBar";
 import { getCurrentUserProfile } from "@/lib/current-user";
+import {
+  getSkillGapDomains,
+  getSkillGapRows,
+  type SkillGapDomain,
+  type SkillGapRow,
+} from "@/lib/learner-data";
 
 export const Route = createFileRoute("/skill-gap-analysis")({
   head: () => ({
@@ -47,109 +53,8 @@ type Filter =
   | "Governance"
   | "Managerial";
 
-type GapRow = {
-  skill: string;
-  category: Exclude<Filter, "all" | "priority">;
-  description: string;
-  currentLevel: number;
-  currentLabel: string;
-  requiredLevel: number;
-  requiredLabel: string;
-  gap: number;
-  priority: "High" | "Moderate" | "Low" | "On Target";
-};
-
-const gapRows: GapRow[] = [
-  {
-    skill: "Python for Statistical Computing",
-    category: "Technical",
-    description: "Pandas, NumPy, data processing and automation",
-    currentLevel: 2,
-    currentLabel: "Foundational",
-    requiredLevel: 4,
-    requiredLabel: "Advanced",
-    gap: -2,
-    priority: "High",
-  },
-  {
-    skill: "GIS & Spatial Data Analysis",
-    category: "Technical",
-    description: "QGIS, spatial mapping and geospatial analysis",
-    currentLevel: 2,
-    currentLabel: "Foundational",
-    requiredLevel: 3,
-    requiredLabel: "Intermediate",
-    gap: -1,
-    priority: "Moderate",
-  },
-  {
-    skill: "National Accounts & GSDP Estimation",
-    category: "Statistical",
-    description: "National accounts concepts and state estimation methods",
-    currentLevel: 2,
-    currentLabel: "Foundational",
-    requiredLevel: 4,
-    requiredLabel: "Advanced",
-    gap: -2,
-    priority: "High",
-  },
-  {
-    skill: "Survey Design & Sampling",
-    category: "Statistical",
-    description: "Survey design, stratification and sampling estimation",
-    currentLevel: 4,
-    currentLabel: "Advanced",
-    requiredLevel: 3,
-    requiredLabel: "Intermediate",
-    gap: 1,
-    priority: "Low",
-  },
-  {
-    skill: "Digital Data Governance",
-    category: "Governance",
-    description: "Data privacy, protection and government data standards",
-    currentLevel: 4,
-    currentLabel: "Advanced",
-    requiredLevel: 3,
-    requiredLabel: "Intermediate",
-    gap: 1,
-    priority: "Low",
-  },
-  {
-    skill: "Field Operations & Quality Control",
-    category: "Managerial",
-    description: "Field coordination, supervision and quality audits",
-    currentLevel: 3,
-    currentLabel: "Intermediate",
-    requiredLevel: 4,
-    requiredLabel: "Advanced",
-    gap: -1,
-    priority: "Moderate",
-  },
-];
-
-const domainGaps = [
-  {
-    domain: "Technical & Analytical",
-    gap: 14,
-    note: "Python, GIS and automated data workflows",
-  },
-  {
-    domain: "Statistical Sciences",
-    gap: 8,
-    note: "National accounts and advanced estimation",
-  },
-  {
-    domain: "Managerial & Field Operations",
-    gap: 4,
-    note: "Field coordination and quality controls",
-  },
-  {
-    domain: "Digital Governance",
-    gap: 0,
-    note: "Current competency meets the role benchmark",
-  },
-];
+const gapRows = getSkillGapRows();
+const domainGaps = getSkillGapDomains();
 
 function SkillGapAnalysisPage() {
   const currentUser = getCurrentUserProfile();
@@ -195,7 +100,7 @@ function SkillGapAnalysisPage() {
                   Understand Your Skill Gaps
                 </h1>
 
-               
+                
 
                 <p className="mt-3 text-xs font-medium text-muted-foreground">
                   {currentUser.currentAssignment
@@ -558,7 +463,7 @@ function FilterButton({
 function PriorityBadge({
   priority,
 }: {
-  priority: GapRow["priority"];
+  priority: "High" | "Moderate" | "Low" | "On Target";
 }) {
   const className =
     priority === "High"

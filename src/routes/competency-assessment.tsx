@@ -116,7 +116,7 @@ function CompetencyAssessmentPage() {
               </div>
             </section>
 
-            <CompetencyRadar />
+            <CompetencyRadar showAction={false} />
 
             <section className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               <div className="rounded-xl border border-border bg-card p-5 shadow-sm">

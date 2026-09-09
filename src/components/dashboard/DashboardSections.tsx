@@ -216,7 +216,11 @@ export function CompetencyOverview() {
   );
 }
 
-export function CompetencyRadar() {
+export function CompetencyRadar({
+  showAction = true,
+}: {
+  showAction?: boolean;
+}) {
   return (
     <div className={cn(card, "p-5 lg:p-6")}>
       <h2 className="text-lg font-bold tracking-tight text-foreground">
@@ -298,18 +302,20 @@ export function CompetencyRadar() {
       </div>
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
-        <p className="text-xs text-muted-foreground">
-          Verified via NSSTA Q4 Cadre Evaluation
-        </p>
+  <p className="text-xs text-muted-foreground">
+    Verified via NSSTA Q4 Cadre Evaluation
+  </p>
 
-        <Link
-          to="/competency-assessment"
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-accent hover:underline"
-        >
-          View Full Audit
-          <ArrowRight className="h-3.5 w-3.5" />
-        </Link>
-      </div>
+  {showAction ? (
+    <Link
+      to="/competency-assessment"
+      className="inline-flex items-center gap-1.5 text-xs font-bold text-accent hover:underline"
+    >
+      View Full Audit
+      <ArrowRight className="h-3.5 w-3.5" />
+    </Link>
+  ) : null}
+</div>
     </div>
   );
 }

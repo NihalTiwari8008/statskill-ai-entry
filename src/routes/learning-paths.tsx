@@ -1,8 +1,5 @@
 import { useState } from "react";
-import {
-  createFileRoute,
-  Link,
-} from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight,
   BookOpen,
@@ -18,109 +15,23 @@ import {
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { DashboardTopBar } from "@/components/dashboard/DashboardTopBar";
 import { getCurrentUserProfile } from "@/lib/current-user";
+import {
+  getLearningRecommendations,
+  type LearningPathRecommendation,
+} from "@/lib/learner-data";
 
 export const Route = createFileRoute("/learning-paths")({
   component: LearningPathsPage,
 });
 
-type LearningPathStatus = "Recommended" | "In Progress" | "Completed";
+type LearningPathStatus = LearningPathRecommendation["status"];
+type LearningPath = LearningPathRecommendation;
 
-type LearningPath = {
-  id: number;
-  title: string;
-  description: string;
-  whyRecommended: string;
-  provider: "iGOT" | "NSSTA";
-  category: string;
-  duration: string;
-  skills: string[];
-  status: LearningPathStatus;
-  progress: number;
-  priority: "High" | "Medium";
-};
-
-const learningPaths: LearningPath[] = [
-  {
-    id: 1,
-    title: "Python for Official Statistics",
-    description:
-      "Build practical Python skills for statistical data processing, analysis, and automation.",
-    whyRecommended:
-      "Your current Python competency is below the expected level for your role and is one of your highest-priority technical gaps.",
-    provider: "iGOT",
-    category: "Technical",
-    duration: "8 hours",
-    skills: ["Python", "Data Analysis", "Automation"],
-    status: "Recommended",
-    progress: 0,
-    priority: "High",
-  },
-  {
-    id: 2,
-    title: "Data Quality and Metadata Standards",
-    description:
-      "Strengthen your understanding of data quality frameworks, metadata, and statistical standards.",
-    whyRecommended:
-      "Your competency profile shows a gap in statistical data quality practices relevant to your current assignment.",
-    provider: "NSSTA",
-    category: "Statistical",
-    duration: "6 hours",
-    skills: ["Data Quality", "Metadata", "Standards"],
-    status: "Recommended",
-    progress: 0,
-    priority: "High",
-  },
-  {
-    id: 3,
-    title: "SQL for Data Management",
-    description:
-      "Develop practical SQL capabilities for querying, transforming, and managing statistical datasets.",
-    whyRecommended:
-      "SQL is an identified technical development area that can improve your ability to work with administrative and statistical data.",
-    provider: "iGOT",
-    category: "Technical",
-    duration: "5 hours",
-    skills: ["SQL", "Data Management"],
-    status: "In Progress",
-    progress: 42,
-    priority: "Medium",
-  },
-  {
-    id: 4,
-    title: "Effective Data Visualization",
-    description:
-      "Learn how to communicate statistical findings through clear and effective visualizations.",
-    whyRecommended:
-      "Improving data visualization will strengthen your ability to communicate analytical findings to stakeholders.",
-    provider: "iGOT",
-    category: "Technical",
-    duration: "4 hours",
-    skills: ["Visualization", "Communication"],
-    status: "Completed",
-    progress: 100,
-    priority: "Medium",
-  },
-];
-
-const filters: Array<"All" | LearningPathStatus> = [
-  "All",
-  "Recommended",
-  "In Progress",
-  "Completed",
-];
-
-function StatusBadge({
-  status,
-}: {
-  status: LearningPathStatus;
-}) {
+function StatusBadge({ status }: { status: LearningPathStatus }) {
   const styles = {
-    Recommended:
-      "bg-orange-50 text-orange-700 border-orange-100",
-    "In Progress":
-      "bg-blue-50 text-blue-700 border-blue-100",
-    Completed:
-      "bg-emerald-50 text-emerald-700 border-emerald-100",
+    Recommended: "bg-orange-50 text-orange-700 border-orange-100",
+    "In Progress": "bg-blue-50 text-blue-700 border-blue-100",
+    Completed: "bg-emerald-50 text-emerald-700 border-emerald-100",
   };
 
   return (
@@ -132,11 +43,7 @@ function StatusBadge({
   );
 }
 
-function LearningPathCard({
-  path,
-}: {
-  path: LearningPath;
-}) {
+function LearningPathCard({ path }: { path: LearningPath }) {
   return (
     <article className="rounded-xl border border-border bg-card p-4 shadow-sm transition-shadow hover:shadow-md">
       <div className="flex flex-col gap-3.5">
@@ -171,21 +78,23 @@ function LearningPathCard({
           {path.description}
         </p>
 
-        <div className="rounded-lg bg-muted/40 px-3 py-2.5">
-          <div className="flex items-start gap-2">
-            <Sparkles className="mt-0.5 h-3 w-3 shrink-0 text-accent" />
+        {path.whyRecommended ? (
+          <div className="rounded-lg bg-muted/40 px-3 py-2.5">
+            <div className="flex items-start gap-2">
+              <Sparkles className="mt-0.5 h-3 w-3 shrink-0 text-accent" />
 
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                Why recommended
-              </p>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Why recommended
+                </p>
 
-              <p className="mt-1 text-[11px] leading-4.5 text-muted-foreground">
-                {path.whyRecommended}
-              </p>
+                <p className="mt-1 text-[11px] leading-4.5 text-muted-foreground">
+                  {path.whyRecommended}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        ) : null}
 
         <div className="flex flex-wrap gap-1.5">
           {path.skills.map((skill) => (
@@ -232,16 +141,27 @@ function LearningPathCard({
             {path.priority} priority
           </div>
 
-          <button
-            type="button"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3 py-2 text-[11px] font-semibold text-accent-foreground transition hover:bg-accent/90"
-          >
-            {path.status === "In Progress"
-              ? "Continue"
-              : "View Path"}
-
-            <ArrowRight className="h-3.5 w-3.5" />
-          </button>
+          {path.courseUrl ? (
+            <a
+              href={path.courseUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3 py-2 text-[11px] font-semibold text-accent-foreground transition hover:bg-accent/90"
+            >
+              {path.status === "In Progress" ? "Continue" : "View Path"}
+              <ArrowRight className="h-3.5 w-3.5" />
+            </a>
+          ) : (
+            <button
+              type="button"
+              disabled
+              className="inline-flex cursor-not-allowed items-center gap-1.5 rounded-lg bg-muted px-3 py-2 text-[11px] font-semibold text-muted-foreground"
+              title="Course link will be provided during integration"
+            >
+              {path.status === "In Progress" ? "Continue" : "View Path"}
+              <ArrowRight className="h-3.5 w-3.5" />
+            </button>
+          )}
         </div>
       </div>
     </article>
@@ -250,15 +170,15 @@ function LearningPathCard({
 
 function LearningPathsPage() {
   const currentUser = getCurrentUserProfile();
+  const learningPaths = getLearningRecommendations();
+
   const [activeFilter, setActiveFilter] =
     useState<"All" | LearningPathStatus>("All");
 
   const filteredPaths =
     activeFilter === "All"
       ? learningPaths
-      : learningPaths.filter(
-          (path) => path.status === activeFilter,
-        );
+      : learningPaths.filter((path) => path.status === activeFilter);
 
   const recommendedCount = learningPaths.filter(
     (path) => path.status === "Recommended",
@@ -272,6 +192,10 @@ function LearningPathsPage() {
     (path) => path.status === "Completed",
   ).length;
 
+  const focusAreas = new Set(
+    learningPaths.flatMap((path) => path.skills),
+  ).size;
+
   return (
     <div className="min-h-screen bg-page-bg">
       <DashboardSidebar className="fixed inset-y-0 left-0 z-30 hidden w-72 lg:flex" />
@@ -281,7 +205,6 @@ function LearningPathsPage() {
 
         <main className="px-4 py-6 lg:px-7 lg:py-7">
           <div className="mx-auto max-w-6xl space-y-5">
-            {/* Page header */}
             <section>
               <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                 <div>
@@ -306,7 +229,6 @@ function LearningPathsPage() {
               </div>
             </section>
 
-            {/* Compact overview */}
             <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
               <SummaryCard
                 label="Recommended"
@@ -331,13 +253,12 @@ function LearningPathsPage() {
 
               <SummaryCard
                 label="Focus Areas"
-                value={3}
+                value={focusAreas}
                 icon={<GraduationCap className="h-3.5 w-3.5" />}
                 iconClass="bg-muted text-muted-foreground"
               />
             </section>
 
-            {/* Learning paths header + filters */}
             <section className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="text-lg font-bold tracking-tight text-foreground">
@@ -354,30 +275,28 @@ function LearningPathsPage() {
                   <Filter className="h-3.5 w-3.5" />
                 </div>
 
-                {filters.map((filter) => (
-                  <button
-                    key={filter}
-                    type="button"
-                    onClick={() => setActiveFilter(filter)}
-                    className={`whitespace-nowrap rounded-md px-2.5 py-1.5 text-[11px] font-semibold transition ${
-                      activeFilter === filter
-                        ? "bg-foreground text-background"
-                        : "text-muted-foreground hover:bg-muted"
-                    }`}
-                  >
-                    {filter}
-                  </button>
-                ))}
+                {(["All", "Recommended", "In Progress", "Completed"] as const).map(
+                  (filter) => (
+                    <button
+                      key={filter}
+                      type="button"
+                      onClick={() => setActiveFilter(filter)}
+                      className={`whitespace-nowrap rounded-md px-2.5 py-1.5 text-[11px] font-semibold transition ${
+                        activeFilter === filter
+                          ? "bg-foreground text-background"
+                          : "text-muted-foreground hover:bg-muted"
+                      }`}
+                    >
+                      {filter}
+                    </button>
+                  ),
+                )}
               </div>
             </section>
 
-            {/* Learning path cards */}
             <section className="grid gap-4 xl:grid-cols-2">
               {filteredPaths.map((path) => (
-                <LearningPathCard
-                  key={path.id}
-                  path={path}
-                />
+                <LearningPathCard key={path.id} path={path} />
               ))}
             </section>
 
@@ -425,9 +344,7 @@ function SummaryCard({
           </p>
         </div>
 
-        <div className={`rounded-lg p-1.5 ${iconClass}`}>
-          {icon}
-        </div>
+        <div className={`rounded-lg p-1.5 ${iconClass}`}>{icon}</div>
       </div>
     </div>
   );
