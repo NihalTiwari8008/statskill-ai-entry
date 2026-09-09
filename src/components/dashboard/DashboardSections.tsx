@@ -79,7 +79,7 @@ export function WelcomeHeader() {
         </div>
 
         <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl">
-          Welcome back, Ananya
+          Welcome back, {officer.name}
         </h1>
 
         <p className="mt-2 text-sm text-muted-foreground">{officer.role}</p>
@@ -302,20 +302,20 @@ export function CompetencyRadar({
       </div>
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
-  <p className="text-xs text-muted-foreground">
-    Verified via NSSTA Q4 Cadre Evaluation
-  </p>
+        <p className="text-xs text-muted-foreground">
+          Verified via NSSTA Q4 Cadre Evaluation
+        </p>
 
-  {showAction ? (
-    <Link
-      to="/competency-assessment"
-      className="inline-flex items-center gap-1.5 text-xs font-bold text-accent hover:underline"
-    >
-      View Full Audit
-      <ArrowRight className="h-3.5 w-3.5" />
-    </Link>
-  ) : null}
-</div>
+        {showAction ? (
+          <Link
+            to="/competency-assessment"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-accent hover:underline"
+          >
+            View Full Audit
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        ) : null}
+      </div>
     </div>
   );
 }
@@ -656,6 +656,10 @@ export function DashboardFooter() {
         <button type="button" className="hover:text-foreground">
           Help & Support
         </button>
+
+        <span>·</span>
+
+        <span>{officer.name}</span>
       </div>
     </footer>
   );
