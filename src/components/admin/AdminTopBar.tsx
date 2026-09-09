@@ -1,6 +1,9 @@
 import { Bell, ChevronDown, Menu, Search } from "lucide-react";
+import { getAdminProfile } from "@/lib/admin-data";
 
 export function AdminTopBar({ onMenuClick }: { onMenuClick?: () => void }) {
+  const admin = getAdminProfile();
+
   return (
     <header className="sticky top-0 z-20 flex h-16 items-center gap-4 border-b border-border bg-card/95 px-4 backdrop-blur lg:px-8">
       <button
@@ -38,14 +41,14 @@ export function AdminTopBar({ onMenuClick }: { onMenuClick?: () => void }) {
           className="flex items-center gap-3 rounded-lg px-2 py-1.5 transition-colors hover:bg-muted"
         >
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-soft text-sm font-bold text-accent">
-            AD
+            {admin.initials}
           </span>
           <span className="hidden text-left sm:block">
             <span className="block text-sm font-semibold leading-tight text-foreground">
-              Admin
+              {admin.name}
             </span>
             <span className="block text-xs leading-tight text-muted-foreground">
-              Workforce Intelligence
+              {admin.subtitle}
             </span>
           </span>
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
