@@ -1,12 +1,3 @@
-/**
- * Frontend data adapters for the learner experience.
- *
- * These values are mock data for development only.
- * The UI should consume the exported getter functions rather than embedding
- * learner/workforce data inside components. During integration, the getter
- * implementations can be replaced with API calls without redesigning pages.
- */
-
 export type DashboardSummaryStat = {
   label: string;
   tag: string;
@@ -83,6 +74,10 @@ export type LearningPathRecommendation = {
   progress: number;
   priority: "High" | "Medium";
   courseUrl?: string;
+};
+
+export type CompetencyAssessmentState = {
+  status: "Pending" | "Processing" | "Ready" | "Completed";
 };
 
 /* ---------------- Dashboard ---------------- */
@@ -209,6 +204,9 @@ const mockDefaultCompetencies: CompetencyScore[] = [
 ];
 
 const mockOverallCompetency = 74;
+const mockCompetencyAssessmentState: CompetencyAssessmentState = {
+  status: "Ready",
+};
 
 export function getDefaultCompetencies() {
   return mockDefaultCompetencies;
@@ -216,6 +214,10 @@ export function getDefaultCompetencies() {
 
 export function getOverallCompetency() {
   return mockOverallCompetency;
+}
+
+export function getCompetencyAssessmentState() {
+  return mockCompetencyAssessmentState;
 }
 
 /* ---------------- Learner skill gaps ---------------- */
