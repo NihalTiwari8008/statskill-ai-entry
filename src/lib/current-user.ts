@@ -14,14 +14,14 @@ export type CurrentUserProfile = {
 const STORAGE_KEY = "statskill.currentUserProfile";
 
 export const defaultCurrentUserProfile: CurrentUserProfile = {
-  name: "Ananya Sharma",
-  designation: "Deputy Statistical Officer",
-  department: "Directorate of Economics & Statistics",
-  currentAssignment: "Survey Operations & Data Analysis",
-  highestQualification: "M.Sc. Statistics",
-  yearsOfExperience: "3.5 years",
-  previousTraining: "Survey Methods, Data Quality",
-  existingSkills: ["Python", "Survey Design", "Data Visualization"],
+  name: "",
+  designation: "",
+  department: "",
+  currentAssignment: "",
+  highestQualification: "",
+  yearsOfExperience: "",
+  previousTraining: "",
+  existingSkills: [],
   workExperience: "",
   resumeFileName: "",
 };
@@ -64,6 +64,7 @@ export function clearCurrentUserProfile(): void {
 }
 
 export function getUserInitials(name: string): string {
+  if (!name || !name.trim()) return "U";
   return name
     .trim()
     .split(/\s+/)
